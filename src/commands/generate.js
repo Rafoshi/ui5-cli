@@ -25,7 +25,7 @@ module.exports = {
     const name = parameters.second    
     const namespace = parameters.third;
  console.log(namespace)
-    const destination = `src/pages/${folder}/${name}`;
+    const destination = `webapp/src/pages/${folder}/${name}`;
 
     await generate({
       template: 'view.js.ejs',
