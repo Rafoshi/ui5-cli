@@ -1,0 +1,16 @@
+sap.ui.define(
+	[
+		"<%= props.namespace %>/src/app/BaseController",		
+		"<%= props.namespace %>/model/RestModel",
+	],
+	function (BaseController, RestModel) {
+	"use strict";
+
+	return BaseController.extend("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", {
+		onInit : function(){
+			console.log("controllet Inicializado");
+		},		
+
+	});
+
+});

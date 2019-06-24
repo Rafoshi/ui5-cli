@@ -1,0 +1,13 @@
+
+  <mvc:View
+	controllerName="MyAppNamespace.src.pages.empresas.Edit"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"	
+	height="100%">
+	<Page>
+		<content>		
+
+		</content>	
+	</Page>
+</mvc:View>
