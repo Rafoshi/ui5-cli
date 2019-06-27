@@ -8,7 +8,7 @@ module.exports = {
       print: { info, error, success },
       filesystem
     } = toolbox
-    console.log(parameters)
+  
     
     if(!parameters.first){
       error("É preciso especificar o tipo [ [p]age | [f]ragment]");
@@ -22,14 +22,33 @@ module.exports = {
       if(!sName) return;
       return sName[0].toUpperCase() + sName.slice(1);
     }
-
     const type = parameters.first.toLowerCase();
     const folder = parameters.second;
     const name = formatCaptalize(folder);
-    const package = await filesystem.read('package.json', 'json');
-    const namespace = package.name;
     const destination = `webapp/src/pages/${folder}/${name}`;
+    
+    const packagePath = 'webapp/manifest.json';
+    const package = await filesystem.read(packagePath, 'json');
+    const namespace = package.name;
+    const destinationTarget = `${namespace}.src.pages.${folder}`;
     const isPAge = (type[0] == 'p')
+
+    let route = {
+      pattern: folder,
+      name: folder,
+      target: folder
+    };
+
+    let target = 
+      {
+        viewName: name,
+        viewLevel: 3,
+        viewPath: destinationTarget,        
+      }
+    
+    package['sap.ui5'].routing.routes = package['sap.ui5'].routing.routes.filter(x => x.pattern != route.pattern);
+    package['sap.ui5'].routing.routes.push(route);
+    package['sap.ui5'].routing.targets[route.pattern] = target;
     
     if(isPAge){
       await generate({
@@ -43,7 +62,7 @@ module.exports = {
         target: `${destination}.controller.js`,
         props: { name, folder, namespace }
       })
-
+      filesystem.write(packagePath, package)
       success(`arquivos gerados em: ${destination}`);
     }
     else{
