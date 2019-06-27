@@ -29,9 +29,12 @@ module.exports = {
     
     const packagePath = 'webapp/manifest.json';
     const appMenuPath = 'webapp/model/data/AppModel.json';
+    const i18nPath = 'webapp/i18n/i18n.properties';
     
     const package = await filesystem.read(packagePath, 'json');
     const appMenu = await filesystem.read(appMenuPath, 'json');
+    let i18n = await filesystem.read(i18nPath);
+    
     const namespace = package.name;
     const destinationTarget = `${namespace}.src.pages.${folder}`;
     const isPAge = (type[0] == 'p')
@@ -55,6 +58,7 @@ module.exports = {
       "expanded": true,
       "key": folder
     }
+    i18n += `\r\nCommom.${name}=${name}`
 
     appMenu.navigation = appMenu.navigation.filter(n => n.key != folder);
     appMenu.navigation.push(menu)
@@ -77,6 +81,8 @@ module.exports = {
       })
       filesystem.write(packagePath, package)
       filesystem.write(appMenuPath, appMenu)
+      filesystem.write(i18nPath, i18n)
+
       success(`arquivos gerados em: ${destination}`);
     }
     else{
