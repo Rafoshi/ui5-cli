@@ -28,7 +28,10 @@ module.exports = {
     const destination = `webapp/src/pages/${folder}/${name}`;
     
     const packagePath = 'webapp/manifest.json';
+    const appMenuPath = 'webapp/model/data/AppModel.json';
+    
     const package = await filesystem.read(packagePath, 'json');
+    const appMenu = await filesystem.read(appMenuPath, 'json');
     const namespace = package.name;
     const destinationTarget = `${namespace}.src.pages.${folder}`;
     const isPAge = (type[0] == 'p')
@@ -45,6 +48,16 @@ module.exports = {
         viewLevel: 3,
         viewPath: destinationTarget,        
       }
+    
+    let menu =  {
+      title: `Commom.${name}`,
+      "icon": "sap-icon://error",
+      "expanded": true,
+      "key": folder
+    }
+
+    appMenu.navigation = appMenu.navigation.filter(n => n.key != folder);
+    appMenu.navigation.push(menu)
     
     package['sap.ui5'].routing.routes = package['sap.ui5'].routing.routes.filter(x => x.pattern != route.pattern);
     package['sap.ui5'].routing.routes.push(route);
@@ -63,6 +76,7 @@ module.exports = {
         props: { name, folder, namespace }
       })
       filesystem.write(packagePath, package)
+      filesystem.write(appMenuPath, appMenu)
       success(`arquivos gerados em: ${destination}`);
     }
     else{
