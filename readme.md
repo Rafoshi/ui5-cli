@@ -12,7 +12,7 @@ Criar página:
 ```shell
 $ ui5 g page <NomeDaPágina>
 ```
-////Esse comando gera o template pada uma página com controller
+// Esse comando gera o template xml, controller e adiciona a rota no manifest.json
 
 ```shell
 $ ui5 g fragment <NomeDoFramento>
