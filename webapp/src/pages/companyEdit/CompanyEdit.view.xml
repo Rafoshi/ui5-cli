@@ -1,0 +1,12 @@
+<mvc:View
+	controllerName="ui5.src.pages.companyEdit.CompanyEdit"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"	
+	height="100%">
+	<Page>
+		<content>		
+
+		</content>	
+	</Page>
+</mvc:View>

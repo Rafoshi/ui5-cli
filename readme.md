@@ -1,24 +1,23 @@
 # ui5 CLI
 
-A CLI for ui5.
+Interface de linha de comandos pada SAP ui5.
 
-## Customizing your CLI
+## Como usar
 
-Check out the documentation at https://github.com/infinitered/gluegun/tree/master/docs.
+Pre Requisitos:
+* Ter clonado esse projeto
+* rodar comando npm link dentro da pasta do projeto
 
-## Publishing to NPM
-
-To package your CLI up for NPM, do this:
+Criar página:
+```shell
+$ ui5 g page <NomeDaPágina>
+```
+////Esse comando gera o template pada uma página com controller
 
 ```shell
-$ npm login
-$ npm whoami
-$ npm lint
-$ npm test
-(if typescript, run `npm run build` here)
-$ npm publish
+$ ui5 g fragment <NomeDoFramento>
 ```
-
+//Esse comando gera o template pada um fragmento 
 # License
 
 MIT - see LICENSE
