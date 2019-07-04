@@ -14,10 +14,17 @@ $ ui5 g page <NomeDaPágina>
 ```
 // Esse comando gera o template xml, controller e adiciona a rota no manifest.json
 
+Criar fragmento:
 ```shell
 $ ui5 g fragment <NomeDoFramento>
 ```
 //Esse comando gera o template pada um fragmento 
+
+Criar Rota:
+```shell
+$ ui5 g rota <NomeDaRota>
+```
+//Esse comando gera a roda e modifica o arquivo manifest.json
 # License
 
 MIT - see LICENSE
