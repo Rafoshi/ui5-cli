@@ -8,8 +8,20 @@ sap.ui.define(
 
 		return BaseController.extend("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", {
 			onInit : function(){
-				console.log("controller [<%= props.name %>] Inicializado");
+				console.log("controller [<%= props.name %>] Iniciado");
 			},		
+
+			onAfterRendering :  function(){
+				console.log("controller [<%= props.name %>] Renderizado");
+			},	
+
+			onBeforeRendering :  function(){
+				console.log("controller [<%= props.name %>] Método chamado antes da Renderização");
+			},	
+
+			onExit :  function(){
+				console.log("controller [<%= props.name %>] Este método é chamado após a destruição do View associada");
+			},	
 
 		});
 	}

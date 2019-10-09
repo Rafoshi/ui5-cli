@@ -55,10 +55,6 @@ module.exports = {
     if(isFragment){
       createFragment(folder)
     }
-    
-
-   
-   
 
   }
 }
