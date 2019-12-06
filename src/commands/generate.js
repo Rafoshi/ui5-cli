@@ -9,7 +9,10 @@ module.exports = {
       createMenu,
       createRoute,
       createController,
-      createFragment
+      createFragment,
+      createCrudController,
+      createCrudFragment,
+      createCrudView,
     } = toolbox
   
     
@@ -23,11 +26,12 @@ module.exports = {
       return;
     }    
     
-    const type = parameters.first.toLowerCase();
-    const folder = parameters.second;   
-    const isPAge = (type[0] == 'p')
-    const isRoute = (type[0] == 'r')
+    const type       = parameters.first.toLowerCase();
+    const folder     = parameters.second;   
+    const isPAge     = (type[0] == 'p')
+    const isRoute    = (type[0] == 'r')
     const isFragment = (type[0] == 'f')
+    const isCrud     = (type[0] == 'c')
     
     if(isPAge){           
       parameters.array.shift()
@@ -37,6 +41,20 @@ module.exports = {
       createController(folder);
       createLabel(folder);       
       createRoute(folder, parameters.array)
+      if(parameters.array.length == 0) {
+        createMenu(folder);
+      }
+    }
+    
+    if(isCrud){           
+      parameters.array.shift()
+      parameters.array.shift();
+      
+      createCrudView(folder);
+      createCrudController(folder);
+      createLabel(folder);       
+      createRoute(folder, parameters.array)
+      createCrudFragment(folder)
       if(parameters.array.length == 0) {
         createMenu(folder);
       }

@@ -1,0 +1,15 @@
+<core:FragmentDefinition 
+	xmlns:core="sap.ui.core" 
+	xmlns="sap.m">
+	
+	<Panel class="sapUiTinyMarginStart sapUiTinyMarginTop shadow">			
+		<content>		  
+			<HBox justifyContent="End" width='97%'>
+				<NumericContent  icon="sap-icon://number-sign" value="{/ID}"/>
+			</HBox>
+			<Label class="sapUiTinyMargin" text="{i18n>Commom.Description}"/>
+			<Input class="sapUiTinyMargin" width="97%"  value="{/Description}" />									
+		</content>
+	</Panel>
+	
+</core:FragmentDefinition>

@@ -1,0 +1,64 @@
+<mvc:View
+	controllerName="<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"    
+	xmlns:l="sap.ui.layout"
+	xmlns:core="sap.ui.core"	
+	height="100%">
+	<Page 
+		showNavButton="true" 
+		title="{i18n>Commom.<%= props.name %>}" 
+		navButtonPress="onNavBack">
+		
+		<content>		
+			<l:Grid defaultSpan="L12 M12 S12">
+			   <l:content>                    				
+				   <List		
+					   id="list"	
+					   class="sapUiTinyMarginStart sapUiTinyMarginTop shadow"
+					   items="{<%= props.name %>>/}"						
+					   keyboardMode="Edit"
+					   mode="MultiSelect"
+					   includeItemInSelection="true" >
+					   <headerToolbar>
+						   <OverflowToolbar>
+							   <Title text="{i18n>Commom.<%= props.name %>}" level="H2" />
+							   <Button									
+								   type="None"
+								   text="{i18n>Commom.Refresh}"
+								   icon="sap-icon://refresh"
+								   press="onRefesh" />
+							   <ToolbarSpacer />   
+							   <Button											
+								   text="{i18n>Commom.Add}"
+								   icon="sap-icon://add"
+								   press="onNewButtonPress" />                                                         
+							   <Button									
+								   type="Reject"
+								   text="{i18n>Commom.Remove}"
+								   icon="sap-icon://delete"
+								   press="onRemoveSelectionPress" />
+						   </OverflowToolbar>
+					   </headerToolbar>
+					   <infoToolbar>
+						   <OverflowToolbar
+								   visible="false">
+							   <Label text=""  />
+						   </OverflowToolbar>
+					   </infoToolbar>
+					   <items>
+						   <CustomListItem type="DetailAndActive" detailPress="onDetailPress">
+							   <VBox>
+								   <ObjectStatus class="sapUiTinyMarginTop" title="{<%= props.name %>>Id}" text="{<%= props.name %>>Description}"/>
+								   <HBox wrap="Wrap">
+									   
+								   </HBox>
+							   </VBox>
+						   </CustomListItem>
+					   </items>
+				   </List>
+			   </l:content>
+		   </l:Grid>
+	   </content>		
+	</Page>
+</mvc:View>

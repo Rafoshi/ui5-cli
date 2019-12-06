@@ -129,6 +129,7 @@ module.exports = toolbox => {
     appMenu.navigation = appMenu.navigation.filter(n => n.key != folder);
     filesystem.write(appMenuPath, appMenu)
   }
+
   async function createView(folder, segments) {
     let props = await getProperties(folder, segments);
     let target = `${props.destination}.view.xml`;
@@ -145,12 +146,44 @@ module.exports = toolbox => {
 
     success(`VIEW CRIADA: ${target}`)
   }
+  
+  async function createCrudView(folder, segments) {
+    let props = await getProperties(folder, segments);
+    let target = `${props.destination}.view.xml`;
+
+    await generate({
+      template: 'crudView.js.ejs',
+      target,
+      props: {
+        name: props.name,
+        folder: folder,
+        namespace: props.namespace
+      }
+    });
+
+    success(`VIEW CRIADA: ${target}`)
+  }
 
   async function createController(folder) {
     let props = await getProperties(folder);
     let controller = `${props.destination}.controller.js`;
     await generate({
       template: 'controller.js.ejs',
+      target: controller,
+      props: {
+        name: props.name,
+        folder: folder,
+        namespace: props.namespace
+      }
+    })
+    success(`CONTROLLER CRIADO: ${controller}`);
+
+  }
+  async function createCrudController(folder) {
+    let props = await getProperties(folder);
+    let controller = `${props.destination}.controller.js`;
+    await generate({
+      template: 'crudController.js.ejs',
       target: controller,
       props: {
         name: props.name,
@@ -178,12 +211,31 @@ module.exports = toolbox => {
 
     success(`FRAGMENTO CRIADO: ${target}`);
   }
+  async function createCrudFragment(folder) {
+
+    let props = await getProperties(folder);
+    let target = `${props.destination}.fragment.xml`;
+    await generate({
+      template: 'crudFragment.js.ejs',
+      target,
+      props: {
+        name: props.name,
+        folder,
+        namespace: props.namespace
+      }
+    });
+
+    success(`FRAGMENTO CRIADO: ${target}`);
+  }
 
   toolbox.createController = createController;
+  toolbox.createFragment = createFragment
+  toolbox.createView = createView
   toolbox.createMenu = createMenu
   toolbox.createRoute = createRoute
-  toolbox.createView = createView
   toolbox.createLabel = createLabel
-  toolbox.createFragment = createFragment
+  toolbox.createCrudController = createCrudController;
+  toolbox.createCrudFragment = createCrudFragment
+  toolbox.createCrudView = createCrudView
 
 }

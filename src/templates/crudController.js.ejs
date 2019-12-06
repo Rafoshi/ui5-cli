@@ -1,0 +1,87 @@
+sap.ui.define(
+	[
+	"<%= props.namespace %>/src/app/BaseController",		
+	"<%= props.namespace %>/model/RestModel",
+	], 
+	function (BaseController, RestModel) {
+		"use strict";
+		const LIST_MODEL_AND_PATH = "<%= props.name %>";
+		const CURRENT_MODEL = "Current";
+		return BaseController.extend("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", {			
+			onInit : function(){
+				this.createListModel()
+				this.createCurrentModel();		
+				console.log("controller [<%= props.name %>] Iniciado");
+			},	
+
+			createListModel(){
+				this.listControl = this.byId("list");
+				this.listModel = this.createRestModel(LIST_MODEL_AND_PATH);				
+				this.listModel
+				.setBusy(this.listControl)
+				.get()
+				this.setModel(this.listModel, LIST_MODEL_AND_PATH);				
+			},
+		
+			createCurrentModel(){
+				this.currentModel = this.createRestModel(LIST_MODEL_AND_PATH);				
+				this.setModel(this.currentModel, CURRENT_MODEL);
+			},
+
+			onRemoveSelectionPress(oEvent){
+				this.removeMultileSelectionPress(oEvent, this.currentModel)
+				.then(() =>  this.onSuccess())				
+				
+			},
+
+			onNewButtonPress(oEvent){												
+				this.currentModel.setData({})
+				const fragment = sap.ui.xmlfragment("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", this);
+				
+				this.showEditDialog(fragment, this.currentModel, true)
+				.then(() => this.onSuccess())				
+			},
+
+			onDetailPress(oEvent){
+				 const accountingType = oEvent.getSource().getBindingContext(LIST_MODEL_AND_PATH).getObject()				 
+				 const clone = JSON.parse(JSON.stringify(accountingType))
+				 this.currentModel.setData(clone)				 
+				 const fragment = sap.ui.xmlfragment("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", this);
+				 
+				 this.showEditDialog(fragment, this.currentModel)
+				 .then(() => this.onSuccess())
+				 .catch(console.log)
+
+			},
+
+			onRefesh(oEvent){
+				this.listModel
+				.setBusy(oEvent.getSource())
+				.get()
+				.then(() => this.succesAction())
+			},			
+			
+			onSuccess(){
+				this.succesAction();				
+				this.currentModel.setData({});						
+				this.listControl.removeSelections()
+
+				this.listModel
+				.setBusy(this.listControl)
+				.get()
+			},
+			onAfterRendering :  function(){
+				console.log("controller [<%= props.name %>] Renderizado");
+			},	
+
+			onBeforeRendering :  function(){
+				console.log("controller [<%= props.name %>] Método chamado antes da Renderização");
+			},	
+
+			onExit :  function(){
+				console.log("controller [<%= props.name %>] Este método é chamado após a destruição do View associada");
+			},	
+
+		});
+	}
+);
