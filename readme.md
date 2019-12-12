@@ -5,7 +5,7 @@ Interface de linha de comandos para SAP ui5.
 ## Como usar
 
 Pre Requisitos:
-* Ter clonado esse projeto
+* Clonar esse projeto
 * rodar comando npm link dentro da pasta do projeto
 
 Criar página:
