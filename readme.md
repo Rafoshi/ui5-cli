@@ -1,6 +1,6 @@
 # ui5 CLI
 
-Interface de linha de comandos pada SAP ui5.
+Interface de linha de comandos para SAP ui5.
 
 ## Como usar
 
