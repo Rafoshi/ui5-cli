@@ -95,11 +95,15 @@ module.exports = toolbox => {
     const i18nPath = 'webapp/i18n/i18n.properties';
     let i18n = await filesystem.read(i18nPath);
     let text= `Commom.${name}=${name}`;
-    i18n+=`\r\n${text}`;
-
-    filesystem.write(i18nPath, i18n)
-    success(`i18n Alterado ${i18nPath}`)
-    info(`--Adicionado: ${text}`)
+    if(i18n.includes(text)){
+      info(`--Label já existe: ${text}`)
+    }else{
+      i18n+=`\r\n${text}`;
+      
+      filesystem.write(i18nPath, i18n)
+      success(`i18n Alterado ${i18nPath}`)
+      info(`--Adicionado: ${text}`)
+    }
   }
 
   async function createMenu(folder) {
