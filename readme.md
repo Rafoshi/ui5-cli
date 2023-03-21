@@ -10,19 +10,19 @@ Pre Requisitos:
 
 Criar página:
 ```shell
-$ ui5 g page <NomeDaPágina>
+$ ui5c g page <NomeDaPágina>
 ```
 // Esse comando gera o template xml, controller e adiciona a rota no manifest.json
 
 Criar fragmento:
 ```shell
-$ ui5 g fragment <NomeDoFramento>
+$ ui5c g fragment <NomeDoFramento>
 ```
 //Esse comando gera o template pada um fragmento 
 
 Criar Rota:
 ```shell
-$ ui5 g rota <NomeDaRota>
+$ ui5c g rota <NomeDaRota>
 ```
 //Esse comando gera a roda e modifica o arquivo manifest.json
 # License

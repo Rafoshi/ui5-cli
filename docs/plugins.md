@@ -42,6 +42,6 @@ This is then accessible in your plugin's commands as `toolbox.bar`.
 
 # Loading a plugin
 
-To load a particular plugin (which has to start with `ui5-*`),
-install it to your project using `npm install --save-dev ui5-PLUGINNAME`,
-and ui5 will pick it up automatically.
+To load a particular plugin (which has to start with `ui5c-*`),
+install it to your project using `npm install --save-dev ui5c-PLUGINNAME`,
+and ui5c will pick it up automatically.
