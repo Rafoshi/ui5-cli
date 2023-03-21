@@ -6,7 +6,7 @@ const { build } = require('gluegun')
 async function run (argv) {
   // create a CLI runtime
   const cli = build()
-    .brand('ui5')
+    .brand('ui5c')
     .src(__dirname)
     .plugins('./node_modules', { matching: 'ui5-*', hidden: true })
     .help() // provides default for help, h, --help, -h
