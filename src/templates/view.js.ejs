@@ -10,7 +10,52 @@
 		navButtonPress="onNavBack">
 		
 		<content>		
+			<Table 
+			inset="false"
+			alternateRowColors="true"
+			items="{<%= props.name %>>/}">
+			<headerToolbar>
+				<OverflowToolbar>
+					<SearchField  placeholder="{i18n>Commom.Find<%= props.name %>}"  width="40%" />
+					<Button  icon="sap-icon://sort"   press=""/>
+					<ToolbarSpacer/>
+					<Button  icon="sap-icon://add" type="Emphasized"   text="{i18n>Commom.New}"  press="onNewPress"/>
 
+				</OverflowToolbar>
+			</headerToolbar>
+			<columns>
+				<Column
+					width="12em">
+					<Text text="{i18n>Commom.Code}" />
+				</Column>
+				<Column
+					minScreenWidth="Tablet"
+					demandPopin="true">
+					<Text text="{i18n>Commom.Description}" />
+				</Column>
+				<Column
+					width="84px" 
+					minScreenWidth="Tablet"
+					demandPopin="true"
+					hAlign="Center">
+					<Text text="{i18n>Commom.Actions}" />
+				</Column>
+			</columns>
+			<items>
+				<ColumnListItem vAlign="Middle">
+					<cells>
+						<ObjectIdentifier							
+							 title="{<%= props.name %>Code}"/>
+						<Text
+							text="{<%= props.name %>Descricao}" />
+						<HBox justifyContent="SpaceBetween" alignContent="SpaceBetween" > 
+							<Button  icon="sap-icon://edit"  press="onNewPress"  type="Default" />
+							<Button  icon="sap-icon://delete" type="Reject"    />
+						</HBox>
+					</cells>
+				</ColumnListItem>
+			</items>
+		</Table>
 		</content>	
 	</Page>
 </mvc:View>

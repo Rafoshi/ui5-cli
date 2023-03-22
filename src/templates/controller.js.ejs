@@ -9,6 +9,9 @@ sap.ui.define(
 		return BaseController.extend("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", {
 			onInit : function(){
 				console.log("controller [<%= props.name %>] Iniciado");
+				this.<%= props.name %> = this.createLocalRestModel("<%= props.name %>.json");
+				this.<%= props.name %>.get().then(console.log)
+				this.setModel(this.<%= props.name %>, "<%= props.name %>");
 			},		
 
 			onAfterRendering :  function(){
@@ -22,6 +25,17 @@ sap.ui.define(
 			onExit :  function(){
 				console.log("controller [<%= props.name %>] Este método é chamado após a destruição do View associada");
 			},	
+
+			onNewPress(oEvent){
+                if(!this._oNew<%= props.name %>Fragment){
+					this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", this);
+					this.getView().addDependent(this._oNew<%= props.name %>Fragment);
+					this._oNew<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+				}
+
+				this._oNew<%= props.name %>Fragment.open()
+
+			}
 
 		});
 	}
