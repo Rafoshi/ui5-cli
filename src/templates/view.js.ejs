@@ -17,7 +17,7 @@
 			<headerToolbar>
 				<OverflowToolbar>
 					<SearchField  placeholder="{i18n>Commom.Find<%= props.name %>}"  width="40%" />
-					<Button  icon="sap-icon://sort"   press=""/>
+					<Button  icon="sap-icon://sort"   press="onSortReverse"/>
 					<ToolbarSpacer/>
 					<Button  icon="sap-icon://add" type="Emphasized"   text="{i18n>Commom.New}"  press="onNewPress"/>
 
@@ -45,11 +45,11 @@
 				<ColumnListItem vAlign="Middle">
 					<cells>
 						<ObjectIdentifier							
-							 title="{<%= props.name %>Code}"/>
+							 title="{<%= props.name %>>Id}"/>
 						<Text
-							text="{<%= props.name %>Descricao}" />
+							text="{<%= props.name %>>Descricao}" />
 						<HBox justifyContent="SpaceBetween" alignContent="SpaceBetween" > 
-							<Button  icon="sap-icon://edit"  press="onNewPress"  type="Default" />
+							<Button  icon="sap-icon://edit"  press="onEditPress"  type="Default" />
 							<Button  icon="sap-icon://delete" type="Reject"    />
 						</HBox>
 					</cells>
