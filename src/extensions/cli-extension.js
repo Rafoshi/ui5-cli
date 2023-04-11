@@ -125,7 +125,7 @@ module.exports = toolbox => {
     const appMenuPath = 'mvc/baseModels/AppMenuModel.json';
     const appMenu = await filesystem.read(appMenuPath, 'json');
     
-    let title =`Title.${props.name}`
+    let title =`Menu.${props.name}`
     let menu = {
       title,
       "icon": "sap-icon://error",
