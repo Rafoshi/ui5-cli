@@ -1,13 +1,13 @@
 sap.ui.define(
 	[
-	"<%= props.namespace %>/src/app/BaseController",		
+	"<%= props.namespace %>/mvc/BaseController",		
 	"<%= props.namespace %>/model/RestModel",
 	], 
 	function (BaseController, RestModel) {
 		"use strict";
 		const LIST_MODEL_AND_PATH = "<%= props.name %>";
 		const CURRENT_MODEL = "Current";
-		return BaseController.extend("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", {			
+		return BaseController.extend("<%= props.target%>.<%= props.name %>", {			
 			onInit : function(){
 				this.createListModel()
 				this.createCurrentModel();		
@@ -36,7 +36,7 @@ sap.ui.define(
 
 			onNewButtonPress(oEvent){												
 				this.currentModel.setData({})
-				const fragment = sap.ui.xmlfragment("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", this);
+				const fragment = sap.ui.xmlfragment("<%= props.target%>.<%= props.name %>", this);
 				
 				this.showEditDialog(fragment, this.currentModel, true)
 				.then(() => this.onSuccess())				
@@ -46,7 +46,7 @@ sap.ui.define(
 				 const accountingType = oEvent.getSource().getBindingContext(LIST_MODEL_AND_PATH).getObject()				 
 				 const clone = JSON.parse(JSON.stringify(accountingType))
 				 this.currentModel.setData(clone)				 
-				 const fragment = sap.ui.xmlfragment("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", this);
+				 const fragment = sap.ui.xmlfragment("<%= props.target%>.<%= props.name %>", this);
 				 
 				 this.showEditDialog(fragment, this.currentModel)
 				 .then(() => this.onSuccess())

@@ -1,12 +1,12 @@
 <mvc:View
-	controllerName="<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>"
+	controllerName="<%= props.target%>.<%= props.name %>"
 	xmlns:mvc="sap.ui.core.mvc"
 	xmlns="sap.m"
 	xmlns:core="sap.ui.core"	
 	height="100%">
 	<Page 
 		showNavButton="true" 
-		title="{i18n>Commom.<%= props.name %>}" 
+		title="{i18n>Title.<%= props.name %>}" 
 		navButtonPress="onNavBack">
 		
 		<content>		
@@ -16,29 +16,29 @@
 			items="{<%= props.name %>>/}">
 			<headerToolbar>
 				<OverflowToolbar>
-					<SearchField  placeholder="{i18n>Commom.Find<%= props.name %>}"  width="40%" />
+					<SearchField  placeholder="{i18n>Input.Find<%= props.name %>}"  width="40%" />
 					<Button  icon="sap-icon://sort"   press="onSortReverse"/>
 					<ToolbarSpacer/>
-					<Button  icon="sap-icon://add" type="Emphasized"   text="{i18n>Commom.New}"  press="onNewPress"/>
+					<Button  icon="sap-icon://add" type="Emphasized"   text="{i18n>Action.New}"  press="onNewPress"/>
 
 				</OverflowToolbar>
 			</headerToolbar>
 			<columns>
 				<Column
 					width="12em">
-					<Text text="{i18n>Commom.Code}" />
+					<Text text="{i18n>Title.Id}" />
 				</Column>
 				<Column
 					minScreenWidth="Tablet"
 					demandPopin="true">
-					<Text text="{i18n>Commom.Description}" />
+					<Text text="{i18n>Title.Description}" />
 				</Column>
 				<Column
 					width="84px" 
 					minScreenWidth="Tablet"
 					demandPopin="true"
 					hAlign="Center">
-					<Text text="{i18n>Commom.Actions}" />
+					<Text text="{i18n>Title.Actions}" />
 				</Column>
 			</columns>
 			<items>

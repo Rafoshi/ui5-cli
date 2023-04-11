@@ -1,4 +1,6 @@
 // add your CLI-specific functionality here, which will then be accessible
+
+
 // to your commands
 module.exports = toolbox => {
 
@@ -15,12 +17,13 @@ module.exports = toolbox => {
   } = toolbox
 
   async function getManifest() {
-    const manifestPath = 'webapp/manifest.json';
+    const manifestPath = 'manifest.json';
+    
     const manifest = await filesystem.read(manifestPath, 'json');
     return manifest;
   }
   async function saveManifest(manifest) {
-    const manifestPath = 'webapp/manifest.json';
+    const manifestPath = 'manifest.json';
     filesystem.write(manifestPath, manifest)
     success(`Manifest Alterado: ${manifestPath}`)
    
@@ -37,7 +40,7 @@ module.exports = toolbox => {
   }
   async function addRoute(route, target) {
     let manifest = await getManifest();
-    const manifestPath = 'webapp/manifest.json';
+    const manifestPath = 'manifest.json';
 
     manifest['sap.ui5'].routing.routes = manifest['sap.ui5'].routing.routes.filter(x => x.pattern != route.pattern);
     manifest['sap.ui5'].routing.routes.push(route);
@@ -46,14 +49,23 @@ module.exports = toolbox => {
   }
 
   async function getProperties(folder, params) {
-    let manifest = await getManifest();
-    let namespace = manifest.name;
+    let manifest = await getManifest();    
+    let namespace = manifest['sap.app'].id;
     let pattern = `${folder}`;
-    let target = `${folder}`;
-    let name = formatCaptalize(folder)
+    let target = `${folder}`;    
+    let name = formatCaptalize(folder.substring(folder.lastIndexOf('/') + 1, folder.length))
     let segments = ''
-    let destTarget = `${namespace}.src.pages.${folder}`;
-    let destination = `webapp/src/pages/${folder}/${name}`;
+    let stractFolder = folder.substring(0, folder.lastIndexOf('/'));
+
+    let replaceAllBar = (a) => {
+      while(a.includes("/")) {
+        a = a.replace('/','.')
+      }
+
+      return a;
+    }
+    let destTarget = `${namespace}.mvc.${replaceAllBar(stractFolder)}`;
+    let destination = `mvc/${stractFolder}/${name}`;
 
     if (params) segments = params.map(z => `{${z}}`).join('/');
     if (segments != '') pattern += `/${segments}`;
@@ -65,7 +77,8 @@ module.exports = toolbox => {
       destTarget,
       pattern,
       destination,
-      target
+      target,
+      folder:stractFolder
     };
   }
 
@@ -75,12 +88,12 @@ module.exports = toolbox => {
 
     let route = {
       pattern: props.pattern,
-      name: folder,
-      target: props.target
+      name: props.name,
+      target: props.name
     };
 
     let target = {
-      viewName: props.target,
+      viewName: props.name,
       viewLevel: 3,
       viewPath: props.destTarget,
     }
@@ -91,10 +104,10 @@ module.exports = toolbox => {
     info(`--Adicionado target para rota: ${props.target}`)
   }
   async function createLabel(folder) {
-    let name = formatCaptalize(folder);
-    const i18nPath = 'webapp/i18n/i18n.properties';
+    let props = await getProperties(folder);
+    const i18nPath = 'i18n/i18n.properties';
     let i18n = await filesystem.read(i18nPath);
-    let text= `Commom.${name}=${name}`;
+    let text= `Title.${props.name}=${props.name}`;
     if(i18n.includes(text)){
       info(`--Label já existe: ${text}`)
     }else{
@@ -107,28 +120,30 @@ module.exports = toolbox => {
   }
 
   async function createMenu(folder) {
-    const appMenuPath = 'webapp/model/data/AppModel.json';
+    let props = await getProperties(folder);
+
+    const appMenuPath = 'mvc/baseModels/AppMenuModel.json';
     const appMenu = await filesystem.read(appMenuPath, 'json');
-    let name = formatCaptalize(folder);
-    let title =`Commom.${name}`
+    
+    let title =`Title.${props.name}`
     let menu = {
       title,
       "icon": "sap-icon://error",
       "expanded": true,
-      "key": folder
+      "key": props.name
     }
 
-    appMenu.navigation = appMenu.navigation.filter(n => n.key != folder);
+    appMenu.navigation = appMenu.navigation.filter(n => n.key != props.name);
     appMenu.navigation.push(menu);
 
     filesystem.write(appMenuPath, appMenu)
     success(`JSON MENU alterado: ${appMenuPath}`)
-    info(`--Adicionado menu: key=${folder} title=${title}`)
+    info(`--Adicionado menu: key=${props.name} title=${title}`)
 
   }
 
   async function removeMenu(folder) {
-    const appMenuPath = 'webapp/model/data/AppModel.json';
+    const appMenuPath ='mvc/baseModels/AppMenuModel.json';
     const appMenu = await filesystem.read(appMenuPath, 'json');
     appMenu.navigation = appMenu.navigation.filter(n => n.key != folder);
     filesystem.write(appMenuPath, appMenu)
@@ -143,7 +158,8 @@ module.exports = toolbox => {
       target,
       props: {
         name: props.name,
-        folder: folder,
+        target : props.destTarget,
+        folder: props.folder,
         namespace: props.namespace
       }
     });
@@ -160,7 +176,8 @@ module.exports = toolbox => {
       target,
       props: {
         name: props.name,
-        folder: folder,
+        target : props.destTarget,
+        folder: props.folder,
         namespace: props.namespace
       }
     });
@@ -176,7 +193,8 @@ module.exports = toolbox => {
       target: controller,
       props: {
         name: props.name,
-        folder: folder,
+        target : props.destTarget,
+        folder: props.folder,
         namespace: props.namespace
       }
     })
@@ -191,7 +209,8 @@ module.exports = toolbox => {
       target: controller,
       props: {
         name: props.name,
-        folder: folder,
+        folder: props.folder,
+        target : props.destTarget,
         namespace: props.namespace
       }
     })
@@ -208,7 +227,8 @@ module.exports = toolbox => {
       target,
       props: {
         name: props.name,
-        folder,
+        folder: props.folder,
+        target : props.destTarget,
         namespace: props.namespace
       }
     });
@@ -224,7 +244,8 @@ module.exports = toolbox => {
       target,
       props: {
         name: props.name,
-        folder,
+        folder:props.folder,
+        target : props.destTarget,
         namespace: props.namespace
       }
     });

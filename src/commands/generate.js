@@ -17,14 +17,19 @@ module.exports = {
   
     
     if(!parameters.first){
-      error("É preciso especificar o tipo [ [p]age | [f]ragment | [r]oute ]");
+      console.log("É preciso especificar o tipo [ [p]age | [f]ragment | [r]oute ]");
       return;
     } 
 
     if(!parameters.second){
-      error("É preciso especificar o nome");
+      console.log("É preciso especificar o nome");      
       return;
-    }    
+    }
+
+    if(!parameters.second.includes("/")){
+      console.log("É preciso especificar a pasta EX CadastrosBasicos/Cadastro");      
+      return;
+    }
     
     const type       = parameters.first.toLowerCase();
     const folder     = parameters.second;   

@@ -1,12 +1,13 @@
 sap.ui.define(
 	[
-	"<%= props.namespace %>/src/app/BaseController",		
+	"<%= props.namespace %>/mvc/BaseController",		
 	"<%= props.namespace %>/model/RestModel",
+	"sap/m/MessageBox"
 	], 
-	function (BaseController, RestModel) {
+	function (BaseController, RestModel, MessageBox) {
 		"use strict";
 
-		return BaseController.extend("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", {
+		return BaseController.extend("<%= props.target%>.<%= props.name %>", {
 			onInit : function(){
 				console.log("controller [<%= props.name %>] Iniciado");
 				this.<%= props.name %> = this.createLocalRestModel("<%= props.name %>.json");
@@ -27,7 +28,7 @@ sap.ui.define(
 			},	
 
 			onNewPress(oEvent){
-				this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment("<%= props.namespace %>.src.pages.<%= props.folder %>.<%= props.name %>", this);
+				this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment("<%= props.target%>.<%= props.name %>", this);
 				this.getView().addDependent(this._oNew<%= props.name %>Fragment);
 				this._oNew<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
 
@@ -36,7 +37,7 @@ sap.ui.define(
 			},
 
 			onEditPress(oEvent){
-				this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment("MyUI5WebApp.src.pages.<%= props.name %>.<%= props.name %>", this);
+				this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment("<%= props.target%>.<%= props.name %>", this);
 				this.getView().addDependent(this._oNew<%= props.name %>Fragment);
 				this._oNew<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
 				
