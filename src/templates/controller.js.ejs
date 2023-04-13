@@ -8,14 +8,18 @@ sap.ui.define(
 		"use strict";
 
 		const FRAGMENT_CADASTRO_PATH = "<%= props.target%>.fragments.<%= props.name %>";
-
+		const CONTROL_MODEL_NAME = "controlModel";
+		const CURRENT_MODEL = "<%= props.name %>"
 		return BaseController.extend("<%= props.target%>.<%= props.name %>", {
 			onInit : function(){
 				console.log("controller [<%= props.name %>] Iniciado");
+			},	
+			
+			initModels(){
 				this.<%= props.name %> = this.createLocalRestModel("<%= props.name %>.json");
-				this.<%= props.name %>.get().then(console.log)
-				this.setModel(this.<%= props.name %>, "<%= props.name %>");
-			},		
+				this.setModel(this.<%= props.name %>, CURRENT_MODEL);
+				this.setModel(new JSONModel({NewEdit: true}), CONTROL_MODEL_NAME);
+			},
 
 			onAfterRendering :  function(){
 				console.log("controller [<%= props.name %>] Renderizado");
