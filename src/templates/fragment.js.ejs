@@ -1,31 +1,64 @@
 <core:FragmentDefinition 
+	xmlns="sap.m" 
+	xmlns:edts="sicap-controls.editors" 
 	xmlns:core="sap.ui.core" 
-	xmlns="sap.m">
-	
-	<Dialog	
-		title="{i18n>Commom.<%= props.name %>}">
-		<content>
-			<VBox class="sapUiSmallMargin" >			
-				<Label text="{i18n>Commom.Descricao}" />
-				<Input value="{/Descricao}" required="true" placeholder="{i18n>Commom.Descricao}" />
+	xmlns:f="sap.ui.layout.form" 
+	xmlns:l="sap.ui.layout">
+    <edts:SICAPDialog 
+		titleAlignment="Start" 
+		title="{i18n>Commom.<%= props.name %>}" 
+		draggable="true" 
+		contentWidth="{const>/dialogContentMedium/contentWidth}" 
+		showHeader="true" 
+		type="Standard">
+        <edts:content>
+			<VBox class="sapUiSmallMargin">
+				<f:Form editable="true">
+					<f:layout>
+						<f:ResponsiveGridLayout
+							labelSpanXL="3"
+							labelSpanL="4"
+							labelSpanM="{const>/dialogContentHuge/labelSpanM}"
+							labelSpanS="12"
+							adjustLabelSpan="true"
+							emptySpanXL="0"
+							emptySpanL="0"
+							emptySpanM="0"
+							emptySpanS="0"
+							columnsXL="1"
+							columnsL="1"
+							columnsM="1"
+							breakpointM="{const>/dialogContentMedium/breakpointM}"
+							singleContainerFullSize="true" />
+					</f:layout>
+					<f:formContainers>
+						<f:FormContainer>
+							<f:formElements>
+								<f:FormElement label="{i18n>Title.Description}">
+									<f:fields>
+										<FlexBox>
+											<items>
+												<Input editable="{controlModel>/NewEdit}" width="100%" value="{/Descricao}">
+													<layoutData>
+														<FlexItemData maxWidth="200px" growFactor="1"/>
+													</layoutData>
+												</Input>
+											</items>
+										</FlexBox>
+									</f:fields>
+								</f:FormElement>																
+							</f:formElements>
+						</f:FormContainer>
+					</f:formContainers>
+				</f:Form>
 			</VBox>
-			
-		</content>
-		<footer>
-			<Toolbar>
-				<content>	
-					<ToolbarSpacer></ToolbarSpacer>			
-					<Button type="Accept"
-							text="{i18n>Commom.Save}"
-							press=".closeDialog" />
-					<Button id="Reject"
-						text="{i18n>Commom.Cancel}"
-						type="Reject"
-						press=".closeDialog"
-						/>
-				</content>
-			</Toolbar>
-		</footer>
-	</Dialog>
-	
+        </edts:content>
+        <edts:beginButton>
+			<edts:SICAPButton class="sapUiTinyMarginEnd" activeIcon="" enabled="{controlModel>/NewEdit}" icon="" iconDensityAware="true" iconFirst="true" text="{i18n>Action.Save}" press="onSave<%= props.name %>Press" textDirection="Inherit" type="Accept" width="" />
+		</edts:beginButton>
+		<edts:endButton>
+			<Button class="sapUiTinyMarginEnd" activeIcon="" enabled="true" icon="" iconDensityAware="true" iconFirst="true" text="{i18n>Action.Cancel}" press="onCancelDialogPress" textDirection="Inherit" type="Reject" width="" />
+		</edts:endButton>
+    </edts:SICAPDialog>
 </core:FragmentDefinition>
+

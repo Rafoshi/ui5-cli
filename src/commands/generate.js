@@ -37,6 +37,7 @@ module.exports = {
     const isRoute    = (type[0] == 'r')
     const isFragment = (type[0] == 'f')
     const isCrud     = (type[0] == 'c')
+    const removeMenu = parameters.third == '-m';
     
     if(isPAge){           
       parameters.array.shift()
@@ -46,7 +47,7 @@ module.exports = {
       createController(folder);
       createLabel(folder);       
       createRoute(folder, parameters.array)
-      if(parameters.array.length == 0) {
+      if(!removeMenu) {
         createMenu(folder);
       }
     }
