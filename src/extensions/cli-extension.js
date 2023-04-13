@@ -122,7 +122,7 @@ module.exports = toolbox => {
   async function createMenu(folder) {
     let props = await getProperties(folder);
 
-    const appMenuPath = 'mvc/baseModels/AppMenuModel.json';
+    const appMenuPath = 'mvc/baseModels/data/AppMenuModel.json';
     const appMenu = await filesystem.read(appMenuPath, 'json');
     
     let title =`Title.${props.name}`
