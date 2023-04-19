@@ -2,23 +2,57 @@ sap.ui.define(
 	[
 	"<%= props.namespace %>/mvc/BaseController",		
 	"<%= props.namespace %>/model/RestModel",
-	"sap/m/MessageBox"
 	], 
-	function (BaseController, RestModel, MessageBox) {
+	function (BaseController, RestModel) {
 		"use strict";
 
 		const FRAGMENT_CADASTRO_PATH = "<%= props.target%>.fragments.<%= props.name %>";
 		const CONTROL_MODEL_NAME = "controlModel";
-		const CURRENT_MODEL = "<%= props.name %>"
+		const CURRENT_MODEL_LIST = "<%= props.name %>";
+		const CURRENT_MOOEL_LIST_API_PATH = "<%= props.name %>";
+		const ATIVO = {SIM: 'S', NAO: 'N'};
+		const PAGINADOR_ID = 'id<%= props.name %>TablePaginator';
+		const SEARCH_FIELD_ID = 'id<%= props.name %>SearchField';
+		const TABLE_ID = 'id<%= props.name %>Table';
+		const PAGINATOR_ENDPOINT = 'ObterTotalDeRegistros/${search}';		
+		const PAGINATOR_ENDPOINT_SEARCH = 'ObterPaginado/${search}/${skip}/${records}';
+
 		return BaseController.extend("<%= props.target%>.<%= props.name %>", {
 			onInit : function(){
-				console.log("controller [<%= props.name %>] Iniciado");
+				that = this;
+
+				this.initModels()
+				this.initControls()
+				
+
+				this.getRouter()
+					.getRoute(GRUPOS_ROUTE)
+					.attachPatternMatched((oEvent) => {
+						this.preparePaginator();
+					});
 			},	
+
+			initControls(){
+				let _paginator = this.byId(PAGINADOR_ID);
+				this.getPaginator = function () {
+					return _paginator;
+				};
+
+				let _searchField = this.byId(SEARCH_FIELD_ID);
+				this.getSearchField = function () {
+					return _searchField;
+				};
+
+				this.paginatorStartPage = 1;
+
+				this.getView().setBusyIndicatorDelay(20);
+			},
 			
 			initModels(){
 				this.<%= props.name %> = this.createLocalRestModel("<%= props.name %>.json");
-				this.setModel(this.<%= props.name %>, CURRENT_MODEL);
-				this.setModel(new JSONModel({NewEdit: true}), CONTROL_MODEL_NAME);
+				this.<%= props.name %>.get()
+				this.setModel(this.<%= props.name %>, CURRENT_MODEL_LIST);
+				this.setModel(new RestModel({NewEdit: true}), CONTROL_MODEL_NAME);
 			},
 
 			onAfterRendering :  function(){
@@ -65,6 +99,7 @@ sap.ui.define(
 				let bindingInfo = table.getBindingInfo("items")
 				let selectedObject = selectedRow.getBindingContext(bindingInfo.model).getObject()
 				let fullMessage = `${messageDeletion} ${selectedObject.Descricao}`;
+				let that = this;
 				MessageBox.confirm(
 					fullMessage, {
 						icon: MessageBox.Icon.INFORMATION,
@@ -73,12 +108,145 @@ sap.ui.define(
 						onClose: function (oAction) {
 							if(oAction == MessageBox.Action.YES){
 								MessageBox.alert("Remoção confirmadoa pelo usuário ")
+								that.deleteItem(selectedObject)
+								.then(()=> that.showSuccessfullMessage())
+								.catch(err => that.showMessageBox(err.message));
 							}
 						}
 					}
 				);
 
-			}
+			},
+
+			onSavePress(oEvent){
+				let modeloAlterado = this._oNew<%= props.name %>Fragment.getModel()
+				let busyControl = oEvent.getSource()
+				
+				busyControl.setBusy(true)
+				
+				if(modeloAlterado.isEditing()){
+					this.Atualizar(modeloAlterado).then(() =>{
+					busyControl.setBusy(false)
+					this.OperacaoRealizadaComSucesso()
+				}).catch(err => {
+					busyControl.setBusy(false)
+					this.showMessageBox(err.message)
+				})
+				}else{
+					modeloAlterado.post().then(() =>{
+						busyControl.setBusy(false)
+						this.OperacaoRealizadaComSucesso()
+					}).catch(err => {
+						busyControl.setBusy(false)
+						this.showMessageBox(err.message)
+					})
+				}
+
+			},
+
+			Atualizar(model){
+				return model.put();
+			},
+
+			Adicionar(model){
+				return model.post()
+			},
+
+			OperacaoRealizadaComSucesso(){
+				this.showSuccessfullMessage();
+				this.getPaginator().loadPageRecords(this._startNavigationCallBackHandler)
+				this._oNew<%= props.name %>Fragment.close();
+				this._oNew<%= props.name %>Fragment.destroy();
+			},
+
+			deleteItem(objetoParaExcluir){
+				let oModel = this.createRestModel(CURRENT_MOOEL_LIST_API_PATH)
+				return oModel.delete(objetoParaExcluir.Id)
+			},
+
+			/*  Inicio métodos referentes a páginação */
+
+			preparePaginator() {
+				setTimeout(function () {
+					that.<%= props.name %> = that.createRequestModel(CURRENT_MOOEL_LIST_API_PATH);
+					that.setModel(that.<%= props.name %>, CURRENT_MODEL_LIST);
+	
+					//Assume página inicial atual, para o paginador, quando houver...
+					that.paginatorStartPage = max(1, that.getPaginator().getPage());
+					that.getPaginator().setView(that.getView());
+					that.getPaginator().setTable(that.byId(TABLE_ID));
+					that.getPaginator().setTableModel(that.<%= props.name %>);
+					that.getPaginator().setTableModelName(CURRENT_MODEL_LIST);
+					that.getPaginator().setTotalRecordsEndPointAddress(PAGINATOR_ENDPOINT);
+					that.getPaginator().setPageRecordsEndPointAddress(PAGINATOR_ENDPOINT_SEARCH);
+					that.startNavigation(that._startNavigationCallBackHandler);
+				}, 300);
+			},
+
+			_startNavigationCallBackHandler: function () {
+				if (!vazia(this) && this.getPaginator().getTotalRecords() <= 0)
+					MessageToast.show("Nada encontrado.");
+			},
+
+			 /**
+			 * Inica a navegação.
+			 * @param {function} fnCallBack Função chamada após o request de totalização
+			 *                              Parâmetros: nenhum
+			 * @returns {none}
+			 */
+			startNavigation(fnCallBack = null) {
+				let that = this;
+				let paginator = this.getPaginator();
+				paginator.startNavigation();
+				paginator.doGetTotalRecords(function (success = true, message = "") {
+					if (success) {
+						paginator.setPage(that.paginatorStartPage);
+						paginator.loadPageRecords();
+						if (isFunction(fnCallBack)) fnCallBack.call(that);
+					}
+				});
+			},
+	
+			/**
+			 * Reinica a navegação pela primeira página com expressão de busca.
+			 * @param {function} fnCallBack Função chamada após o request de totalização
+			 *                              Parâmetros: nenhum
+			 * @returns {none}
+			 */
+			restartNavigation(fnCallBack = null) {
+				this.paginatorStartPage = 1;
+				this.startNavigation(fnCallBack);
+			},
+	
+			onPaginatorGetFilterExpression(oEvent) {
+				let search = this.getSearchField().getValue();
+				let filter = "";  //"SQL = [ALIAS].[NomeColuna] cond expressão"
+				this.getPaginator().setFilterExpression(filter);
+				this.getPaginator().setSearchExpression(search);
+			},
+	
+			onPaginatorAfterGetTotalRecords: function (oEvent) { },
+	
+			onPaginatorAfterGetPageRecords: function (oEvent) { },
+	
+			onSearchFieldChangeHandler: function (oEvent) {
+				if (this.getPaginator().getActive()) {
+					if (vazia(this.getSearchField().getValue()))
+						this.restartNavigation(this._startNavigationCallBackHandler);
+				}
+			},
+	
+			onSearchFieldClickHandler: function (oEvent) {
+				if (oEvent.getParameter("clearButtonPressed") === false) {
+					let validSearchExpression = this.getPaginator().validateSearchExpression(this.getSearchField().getValue(), false);
+					if (!validSearchExpression.success) {
+						MessageToast.show(validSearchExpression.message);
+					} else
+						this.restartNavigation(this._startNavigationCallBackHandler);
+				}
+			},
+
+			/* Fim metodos paginação*/
 
 		});
 	}
