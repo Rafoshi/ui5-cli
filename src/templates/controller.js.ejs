@@ -9,14 +9,15 @@ sap.ui.define(
 		const FRAGMENT_CADASTRO_PATH = "<%= props.target%>.fragments.<%= props.name %>";
 		const CONTROL_MODEL_NAME = "controlModel";
 		const CURRENT_MODEL_LIST = "<%= props.name %>";
-		const CURRENT_MOOEL_LIST_API_PATH = "<%= props.name %>";
+		const PAGE_ROUTE = "<%= props.name %>";
+		const CURRENT_MODEL_LIST_API_PATH = "<%= props.name %>";
 		const ATIVO = {SIM: 'S', NAO: 'N'};
 		const PAGINADOR_ID = 'id<%= props.name %>TablePaginator';
 		const SEARCH_FIELD_ID = 'id<%= props.name %>SearchField';
 		const TABLE_ID = 'id<%= props.name %>Table';
 		const PAGINATOR_ENDPOINT = 'ObterTotalDeRegistros/${search}';		
 		const PAGINATOR_ENDPOINT_SEARCH = 'ObterPaginado/${search}/${skip}/${records}';
-
+		let that = this;
 		return BaseController.extend("<%= props.target%>.<%= props.name %>", {
 			onInit : function(){
 				that = this;
@@ -26,7 +27,7 @@ sap.ui.define(
 				
 
 				this.getRouter()
-					.getRoute(GRUPOS_ROUTE)
+					.getRoute(PAGE_ROUTE)
 					.attachPatternMatched((oEvent) => {
 						this.preparePaginator();
 					});
@@ -49,7 +50,7 @@ sap.ui.define(
 			},
 			
 			initModels(){
-				this.<%= props.name %> = this.createLocalRestModel("<%= props.name %>.json");
+				this.<%= props.name %> = this.createRestModel(CURRENT_MODEL_LIST_API_PATH);
 				this.<%= props.name %>.get()
 				this.setModel(this.<%= props.name %>, CURRENT_MODEL_LIST);
 				this.setModel(new RestModel({NewEdit: true}), CONTROL_MODEL_NAME);
@@ -160,7 +161,7 @@ sap.ui.define(
 			},
 
 			deleteItem(objetoParaExcluir){
-				let oModel = this.createRestModel(CURRENT_MOOEL_LIST_API_PATH)
+				let oModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH)
 				return oModel.delete(objetoParaExcluir.Id)
 			},
 
@@ -168,7 +169,7 @@ sap.ui.define(
 
 			preparePaginator() {
 				setTimeout(function () {
-					that.<%= props.name %> = that.createRequestModel(CURRENT_MOOEL_LIST_API_PATH);
+					that.<%= props.name %> = that.createRestModel(CURRENT_MODEL_LIST_API_PATH);
 					that.setModel(that.<%= props.name %>, CURRENT_MODEL_LIST);
 	
 					//Assume página inicial atual, para o paginador, quando houver...
