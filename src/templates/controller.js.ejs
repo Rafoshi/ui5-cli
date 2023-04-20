@@ -72,8 +72,8 @@ sap.ui.define(
 				this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
 				this.getView().addDependent(this._oNew<%= props.name %>Fragment);
 				this._oNew<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
-
-				this._oNew<%= props.name %>Fragment.setModel(new RestModel())
+				let oModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH);
+				this._oNew<%= props.name %>Fragment.setModel(oModel)
 				this._oNew<%= props.name %>Fragment.open()
 			},
 
@@ -86,7 +86,7 @@ sap.ui.define(
 				let table = selectedRow.getParent();
 				let bindingInfo = table.getBindingInfo("items")
 				let selectedObject = selectedRow.getBindingContext(bindingInfo.model).getObject()
-				let selectedObjectModel = new RestModel();
+				let selectedObjectModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH)
 				selectedObjectModel.setData(selectedObject)				
 				this._oNew<%= props.name %>Fragment.setModel(selectedObjectModel)
 				this._oNew<%= props.name %>Fragment.open()
