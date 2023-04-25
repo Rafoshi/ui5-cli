@@ -2,8 +2,9 @@ sap.ui.define(
 	[
 	"<%= props.namespace %>/mvc/BaseController",		
 	"<%= props.namespace %>/model/RestModel",
+    "sicap/src/controls/dialogs/MessageBox"
 	], 
-	function (BaseController, RestModel) {
+	function (BaseController, RestModel, MessageBox) {
 		"use strict";
 
 		const FRAGMENT_CADASTRO_PATH = "<%= props.target%>.fragments.<%= props.name %>";
@@ -11,7 +12,6 @@ sap.ui.define(
 		const CURRENT_MODEL_LIST = "<%= props.name %>";
 		const PAGE_ROUTE = "<%= props.name %>";
 		const CURRENT_MODEL_LIST_API_PATH = "<%= props.name %>";
-		const ATIVO = {SIM: 'S', NAO: 'N'};
 		const PAGINADOR_ID = 'id<%= props.name %>TablePaginator';
 		const SEARCH_FIELD_ID = 'id<%= props.name %>SearchField';
 		const TABLE_ID = 'id<%= props.name %>Table';
@@ -69,18 +69,24 @@ sap.ui.define(
 			},	
 
 			onNewPress(oEvent){
-				this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
-				this.getView().addDependent(this._oNew<%= props.name %>Fragment);
-				this._oNew<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+				this._o<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
+				this._o<%= props.name %>Fragment.setEscapeHandler((oEscapeHandler) => {
+					this._o<%= props.name %>Fragment.destroy();
+				});
+				this.getView().addDependent(this._o<%= props.name %>Fragment);
+				this._o<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
 				let oModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH);
-				this._oNew<%= props.name %>Fragment.setModel(oModel)
-				this._oNew<%= props.name %>Fragment.open()
+				this._o<%= props.name %>Fragment.setModel(oModel)
+				this._o<%= props.name %>Fragment.open()
 			},
 
 			onEditPress(oEvent){
-				this._oNew<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
-				this.getView().addDependent(this._oNew<%= props.name %>Fragment);
-				this._oNew<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+				this._o<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
+				this._o<%= props.name %>Fragment.setEscapeHandler((oEscapeHandler) => {
+					this._o<%= props.name %>Fragment.destroy();
+				});
+				this.getView().addDependent(this._o<%= props.name %>Fragment);
+				this._o<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
 				
 				let selectedRow = oEvent.getSource().getParent().getParent();
 				let table = selectedRow.getParent();
@@ -88,8 +94,8 @@ sap.ui.define(
 				let selectedObject = selectedRow.getBindingContext(bindingInfo.model).getObject()
 				let selectedObjectModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH)
 				selectedObjectModel.setData(selectedObject)				
-				this._oNew<%= props.name %>Fragment.setModel(selectedObjectModel)
-				this._oNew<%= props.name %>Fragment.open()
+				this._o<%= props.name %>Fragment.setModel(selectedObjectModel)
+				this._o<%= props.name %>Fragment.open()
 
 			},
 			
@@ -100,27 +106,20 @@ sap.ui.define(
 				let bindingInfo = table.getBindingInfo("items")
 				let selectedObject = selectedRow.getBindingContext(bindingInfo.model).getObject()
 				let fullMessage = `${messageDeletion} ${selectedObject.Descricao}`;
-				let that = this;
-				MessageBox.confirm(
-					fullMessage, {
-						icon: MessageBox.Icon.INFORMATION,
-						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
-						emphasizedAction: MessageBox.Action.YES,
-						onClose: function (oAction) {
-							if(oAction == MessageBox.Action.YES){
-								MessageBox.alert("Remoção confirmadoa pelo usuário ")
-								that.deleteItem(selectedObject)
-								.then(()=> that.showSuccessfullMessage())
-								.catch(err => that.showMessageBox(err.message));
-							}
-						}
-					}
-				);
+				let AoConfirmar = (oAction) => {					
+					if(oAction == MessageBox.Action.YES){
+						this.deleteItem(selectedObject)
+						.then(()=> this.showSuccessfullMessage())
+						.catch(err => this.showMessageBox(err.message));
+					}					
+				}
+
+				MessageBox.confirm(fullMessage, AoConfirmar);
 
 			},
 
 			onSavePress(oEvent){
-				let modeloAlterado = this._oNew<%= props.name %>Fragment.getModel()
+				let modeloAlterado = this._o<%= props.name %>Fragment.getModel()
 				let busyControl = oEvent.getSource()
 				
 				busyControl.setBusy(true)
@@ -156,8 +155,8 @@ sap.ui.define(
 			OperacaoRealizadaComSucesso(){
 				this.showSuccessfullMessage();
 				this.getPaginator().loadPageRecords(this._startNavigationCallBackHandler)
-				this._oNew<%= props.name %>Fragment.close();
-				this._oNew<%= props.name %>Fragment.destroy();
+				this._o<%= props.name %>Fragment.close();
+				this._o<%= props.name %>Fragment.destroy();
 			},
 
 			deleteItem(objetoParaExcluir){
@@ -189,12 +188,6 @@ sap.ui.define(
 					MessageToast.show("Nada encontrado.");
 			},
 
-			 /**
-			 * Inica a navegação.
-			 * @param {function} fnCallBack Função chamada após o request de totalização
-			 *                              Parâmetros: nenhum
-			 * @returns {none}
-			 */
 			startNavigation(fnCallBack = null) {
 				let that = this;
 				let paginator = this.getPaginator();
@@ -206,14 +199,8 @@ sap.ui.define(
 						if (isFunction(fnCallBack)) fnCallBack.call(that);
 					}
 				});
-			},
-	
-			/**
-			 * Reinica a navegação pela primeira página com expressão de busca.
-			 * @param {function} fnCallBack Função chamada após o request de totalização
-			 *                              Parâmetros: nenhum
-			 * @returns {none}
-			 */
+			},	
+			
 			restartNavigation(fnCallBack = null) {
 				this.paginatorStartPage = 1;
 				this.startNavigation(fnCallBack);
