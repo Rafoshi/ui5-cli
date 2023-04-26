@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "corepack": "^0.17.1",
-    "gluegun": "^2.1.0"
+    "gluegun": "^5.1.2"
   },
   "devDependencies": {
     "jest": "^23.6.0",
