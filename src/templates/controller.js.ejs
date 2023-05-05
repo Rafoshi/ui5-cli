@@ -100,7 +100,7 @@ sap.ui.define(
 			},
 			
 			onDeletePress(oEvent){
-				let messageDeletion = this.getText("Commom.ConfirmDelete")
+				let messageDeletion = this.getText("Question.WantDeleteItem")
 				let selectedRow = oEvent.getSource().getParent().getParent();
 				let table = selectedRow.getParent();
 				let bindingInfo = table.getBindingInfo("items")

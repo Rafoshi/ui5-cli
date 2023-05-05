@@ -18,7 +18,7 @@
 			items="{<%= props.name %>>/}">
 			<headerToolbar>
 				<OverflowToolbar>
-					<SearchField id="id<%= props.name %>SearchField" search="onSearchFieldChangeHandler" placeholder="{i18n>Placeholder.Find}"  width="40%" />
+					<SearchField id="id<%= props.name %>SearchField" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="40%" />
 					<Button  icon="sap-icon://sort"   press="onSortReverse"/>
 					<ToolbarSpacer/>
 					<Button  icon="sap-icon://add" type="Emphasized"   text="{i18n>Action.New}"  press="onNewPress"/>
