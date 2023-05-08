@@ -17,13 +17,11 @@
 			alternateRowColors="true"
 			items="{<%= props.name %>>/}">
 			<headerToolbar>
-				<OverflowToolbar>
-					<SearchField id="id<%= props.name %>SearchField" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="40%" />
-					<Button  icon="sap-icon://sort"   press="onSortReverse"/>
+				<ToolBar>
+					<SearchField id="id<%= props.name %>SearchField" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="100%" />
 					<ToolbarSpacer/>
 					<Button  icon="sap-icon://add" type="Emphasized"   text="{i18n>Action.New}"  press="onNewPress"/>
-
-				</OverflowToolbar>
+				</ToolBar>
 			</headerToolbar>
 			<columns>
 				<Column
