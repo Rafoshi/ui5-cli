@@ -22,7 +22,7 @@ sap.ui.define(
 			onInit : function(){
 				that = this;
 
-				this.initModels()
+				this.iniciarModelsRelacionados()
 				this.initControls()
 				
 
@@ -49,10 +49,7 @@ sap.ui.define(
 				this.getView().setBusyIndicatorDelay(20);
 			},
 			
-			initModels(){
-				this.<%= props.name %> = this.createRestModel(CURRENT_MODEL_LIST_API_PATH);
-				this.<%= props.name %>.get()
-				this.setModel(this.<%= props.name %>, CURRENT_MODEL_LIST);
+			iniciarModelsRelacionados(){				
 				this.setModel(new RestModel({NewEdit: true}), CONTROL_MODEL_NAME);
 			},
 
@@ -168,7 +165,7 @@ sap.ui.define(
 
 			preparePaginator() {
 				setTimeout(function () {
-					that.<%= props.name %> = that.createRestModel(CURRENT_MODEL_LIST_API_PATH);
+					that.<%= props.name %> = that.createRequestModel(CURRENT_MODEL_LIST_API_PATH);
 					that.setModel(that.<%= props.name %>, CURRENT_MODEL_LIST);
 	
 					//Assume página inicial atual, para o paginador, quando houver...
