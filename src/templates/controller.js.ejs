@@ -17,6 +17,7 @@ sap.ui.define(
 		const PAGINATOR_ENDPOINT = 'ObterTotalDeRegistros/${search}';		
 		const PAGINATOR_ENDPOINT_SEARCH = 'ObterPaginado/${search}/${skip}/${records}';
 		let that = this;
+		
 		return BaseController.extend("<%= props.target%>.<%= props.name %>", {
 			onInit : function(){
 				that = this;
