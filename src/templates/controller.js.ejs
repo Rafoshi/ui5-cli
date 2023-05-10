@@ -1,9 +1,10 @@
 sap.ui.define(
 	[
 	"<%= props.namespace %>/mvc/BaseController",
+	"sap/ui/model/json/JSONModel",		
 	"sicap/src/controls/dialogs/MessageBox"
 	], 
-	function (BaseController, MessageBox) {
+	function (BaseController,JSONModel, MessageBox) {
 		"use strict";
 
 		const FRAGMENT_CADASTRO_PATH = "<%= props.target%>.fragments.<%= props.name %>";
@@ -17,7 +18,7 @@ sap.ui.define(
 		const PAGINATOR_ENDPOINT = 'ObterTotalDeRegistros/${search}';		
 		const PAGINATOR_ENDPOINT_SEARCH = 'ObterPaginado/${search}/${skip}/${records}';
 		let that = this;
-		
+
 		return BaseController.extend("<%= props.target%>.<%= props.name %>", {
 			onInit : function(){
 				that = this;
