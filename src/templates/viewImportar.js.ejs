@@ -29,51 +29,8 @@
 						text="{i18n>Title.TodosDoArquivo}"
 						key="todos" >
 						<content>
-							<Table 
-							id="id<%= props.name %>Table"
-							inset="false"
-							busyIndicatorSize="Medium"
-							growing="true" 
-							growingScrollToLoad="true"
-							alternateRowColors="true"
-							items="{Arquivo>/}">
-							<headerToolbar>
-								<Toolbar>
-									<SearchField id="id<%= props.name %>earchField" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="100%" />
-									<ToolbarSpacer/>
-								</Toolbar>
-							</headerToolbar>
-							<columns>
-								<Column
-									hAlign="End" 
-									width="6em">
-									<Text text="{i18n>Commom.<%= props.name %>}" />
-								</Column>
-								<Column
-									minScreenWidth="Tablet"
-									demandPopin="true">
-									<Text text="{i18n>Title.Description}" />
-								</Column>		
-								<Column
-									width="104px" 
-									minScreenWidth="Tablet"
-									demandPopin="true"
-									hAlign="Center">
-									<Text text="{i18n>Title.Actions}" />
-								</Column>						
-							</columns>
-							<items>
-								<ColumnListItem vAlign="Middle">
-									<cells>
-										<ObjectIdentifier title="{<%= props.name %>>Codigo}"/>
-										<Text text="{<%= props.name %>>Descricao}"  wrapping="false" tooltip="{<%= props.name %>>Descricao}"  />																			
-										<HBox justifyContent="SpaceAround" alignContent="SpaceAround" > 
-											<Button  icon="sap-icon://upload-to-cloud" tooltip="{i18n>CNAE.Button.Importar}" press="onImportSinglePress"  type="Default" />
-										</HBox>
-									</cells>
-								</ColumnListItem>
-							</items>
-							</Table>
+							<core:Fragment fragmentName="<%= props.target%>.<%= props.name %>.Fragments.Lista" type="XML" />
+
 						</content>
 					</IconTabFilter>
 					<IconTabSeparator ></IconTabSeparator>
