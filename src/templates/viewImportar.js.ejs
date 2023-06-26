@@ -1,0 +1,168 @@
+<mvc:View
+	controllerName="<%= props.target%>.<%= props.name %>"
+	xmlns:u="sap.ui.unified"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core"	
+	xmlns:pg="sicap-controls.paginator"
+	xmlns:bd="sap.ui.webc.main"
+	height="100%">
+	<Page 
+		id="idPage<%= props.name %>"
+		floatingFooter="true"
+		showFooter="false"  
+		showNavButton="true" 
+		title="Title.<%= props.name %>" 
+		navButtonPress="onNavBack">
+		<headerContent>
+		 <ToolbarSpacer /> 
+		 <u:FileUploader id="FileUploaderId" sameFilenameAllowed="true" iconOnly="false" buttonOnly="true" fileType="XLSX,xlsx"
+		 icon="sap-icon://upload" iconFirst="true" style="Emphasized" change="onCarregarArquivoPress" 
+		 enabled="{= (${controlModel>/Adicionar} &amp;&amp; ${controlModel>/EmCriacao}) || ${controlModel>/Editar}}"/>	
+		</headerContent>
+		<content>
+			<IconTabBar id="idTabBar<%= props.name %>"  selectedKey="importados"  class="sapUiNoContentPadding" expandable="false" >
+				<items>
+					<IconTabFilter
+						showAll="true"						 
+						count="{Arquivo>/length}"
+						text="{i18n>Title.TodosDoArquivo}"
+						key="todos" >
+						<content>
+							<Table 
+							id="id<%= props.name %>Table"
+							inset="false"
+							busyIndicatorSize="Medium"
+							growing="true" 
+							growingScrollToLoad="true"
+							alternateRowColors="true"
+							items="{Arquivo>/}">
+							<headerToolbar>
+								<Toolbar>
+									<SearchField id="id<%= props.name %>earchField" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="100%" />
+									<ToolbarSpacer/>
+								</Toolbar>
+							</headerToolbar>
+							<columns>
+								<Column
+									hAlign="End" 
+									width="6em">
+									<Text text="{i18n>Commom.<%= props.name %>}" />
+								</Column>
+								<Column
+									minScreenWidth="Tablet"
+									demandPopin="true">
+									<Text text="{i18n>Title.Description}" />
+								</Column>		
+								<Column
+									width="104px" 
+									minScreenWidth="Tablet"
+									demandPopin="true"
+									hAlign="Center">
+									<Text text="{i18n>Title.Actions}" />
+								</Column>						
+							</columns>
+							<items>
+								<ColumnListItem vAlign="Middle">
+									<cells>
+										<ObjectIdentifier title="{<%= props.name %>>Codigo}"/>
+										<Text text="{<%= props.name %>>Descricao}"  wrapping="false" tooltip="{<%= props.name %>>Descricao}"  />																			
+										<HBox justifyContent="SpaceAround" alignContent="SpaceAround" > 
+											<Button  icon="sap-icon://upload-to-cloud" tooltip="{i18n>CNAE.Button.Importar}" press="onImportSinglePress"  type="Default" />
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+							</Table>
+						</content>
+					</IconTabFilter>
+					<IconTabSeparator ></IconTabSeparator>
+					<IconTabFilter						
+						key="Resultado" 
+						iconColor="Positive" 
+						icon="sap-icon://documents" 
+						count="{Resultado>/length}"
+						text="{i18n>Title.ResultadoImportacao}"
+						 >
+						<content>
+							<Table 
+							id="id<%= props.name %>TableParaResultado"
+							inset="false"
+							busyIndicatorSize="Medium"
+							growing="true" 
+							growingScrollToLoad="true"
+							alternateRowColors="true"
+							items="{Resultado>/}">
+							<headerToolbar>
+								<Toolbar>
+									<SearchField id="id<%= props.name %>earchFieldImportados" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="100%" />
+								</Toolbar>
+							</headerToolbar>
+							<columns>
+								<Column
+									width="6em">
+									<Text text="{i18n>Commom.<%= props.name %>}" />
+								</Column>
+								<Column
+									minScreenWidth="Tablet"
+									demandPopin="true">
+									<Text text="{i18n>Title.Description}" />
+								</Column>
+								<Column
+									width="6em"
+									minScreenWidth="Tablet"
+									demandPopin="true">
+									<Text text="{i18n>Title.Anexo}" />
+								</Column>
+								<Column
+									width="6em"
+									minScreenWidth="Tablet"
+									demandPopin="true">
+									<Text text="{i18n>Title.FatorR}" />
+								</Column>
+								<Column
+									hAlign="End" 
+									width="6em"
+									minScreenWidth="Tablet"
+									demandPopin="true">
+									<Text text="{i18n>Title.Alicota}" />
+								</Column>
+								<Column
+									width="104px" 
+									minScreenWidth="Tablet"
+									demandPopin="true"
+									hAlign="Center">
+									<Text text="{i18n>Title.Actions}" />
+								</Column>
+								
+							</columns>
+							<items>
+								<ColumnListItem vAlign="Middle">
+									<cells>
+										<ObjectIdentifier title="{<%= props.name %>Importados>Codigo{i18n>Commom.<%= props.name %>}"/>
+										<Text text="{<%= props.name %>Importados>Descricao}"  wrapping="false" tooltip="{<%= props.name %>Importados>Descricao}"  />
+										<Text text="{<%= props.name %>Importados>Anexo}" />
+										<CheckBox  selected="{= ${<%= props.name %>Importados>FatorR} === 'S' ? true : false}" displayOnly="true" />
+										<Text text="{<%= props.name %>Importados>Aliquota}%" />
+										<HBox justifyContent="SpaceAround" alignContent="SpaceAround" > 
+											<Button  class="sapUiTinyMarginEnd" enabled="{controlModel>/Remover}" icon="sap-icon://delete"  press="onRemovePress"  type="Reject" />
+										</HBox>
+									</cells>
+								</ColumnListItem>
+							</items>
+							</Table>							
+						</content>
+					</IconTabFilter>
+				</items>
+			</IconTabBar>		
+		</content>	
+		<footer>
+			<OverflowToolbar>
+				<bd:Badge text="{Arquivo>/length}" />
+				<Text text="{i18n>Commom.ArquivosEncontrados}" ></Text>
+				<ToolbarSpacer/>
+				<Button  type="Emphasized" icon="sap-icon://upload-to-cloud" tooltip="{i18n>Commom.Button.Tooltip.Import}"  text="{i18n>Commom.Button.ImportarTodos}"  press="onImportMultiplePress"   />
+			</OverflowToolbar>
+		</footer>	
+	</Page>
+</mvc:View>

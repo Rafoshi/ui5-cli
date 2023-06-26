@@ -1,0 +1,370 @@
+sap.ui.define(
+	[
+	"<%= props.namespace %>/mvc/BaseController",
+	"sap/ui/model/json/JSONModel",		
+	"sicap/src/controls/dialogs/MessageBox"
+	], 
+	function (BaseController,JSONModel, MessageBox) {
+		"use strict";
+
+		const FRAGMENT_CADASTRO_PATH = "<%= props.target%>.fragments.<%= props.name %>";
+		const FRAGMENT_LISTA_PATH = "<%= props.target%>.fragments.<%= props.name %>.Lista";
+		const CONTROL_MODEL_NAME = "controlModel";
+		const CURRENT_MODEL_LIST = "<%= props.name %>";
+		const PAGE_ROUTE = "<%= props.name %>";
+		const CURRENT_MODEL_LIST_API_PATH = "v1/<%= props.name %>";
+		const ADD_MULTIPLE_API_PATH = "v1/<%= props.name %>/Multiplo";
+		const PAGINADOR_ID = 'id<%= props.name %>TablePaginator';
+		const SEARCH_FIELD_ID = 'id<%= props.name %>SearchField';
+		const TABLE_ID = 'id<%= props.name %>Table';
+		const PAGE_ID = 'idPage<%= props.name %>';
+		const TAB_BAR_ID = 'idTabBar<%= props.name %>';
+		const PAGINATOR_ENDPOINT = 'ObterTotalDeRegistros/${search}';		
+		const PAGINATOR_ENDPOINT_SEARCH = 'ObterPaginado/${search}/${skip}/${records}';
+		const IMPORTADOS = "Importados";
+		const NAO_IMPORTADOS = "NaoImportados";
+		const NAO_IMPORTADOS_FILTER_KEY = "NaoImportados";
+		let that = this;
+
+		return BaseController.extend("<%= props.target%>.<%= props.name %>", {
+			onInit : function(){
+				that = this;
+				this._page = this.byId(PAGE_ID)
+				this._iconTabBar = this.byId(TAB_BAR_ID)
+				this.initControls()					
+
+				this.getRouter()
+					.getRoute(PAGE_ROUTE)
+					.attachPatternMatched((oEvent) => {
+						this.iniciarModelsRelacionados()
+						this.aplicarControleAcesso()
+					});
+			},
+			
+			aplicarControleAcesso(){
+				let listaAutorizacoes = [
+					"<%= props.name %>Adicionar",
+					"<%= props.name %>Editar",
+					"<%= props.name %>Remover",
+					"<%= props.name %>Visualizar"
+				]
+				this.verifyUserAuthorization(this.getView(), listaAutorizacoes
+					,
+					(validacao) => {
+						if (validacao.success && validacao.data.<%= props.name %>Visualizar == AUTORIZACAO_RECURSO.Autorizado) {
+							this.verifyAndGetAPIConstants(this.getView(), API_MAP_CONSTANTES.OPCOES_GENERICAS, function (resp) {
+								this.getModel(CONTROL_MODEL_NAME).setData({
+									Adicionar: validacao.data.<%= props.name %>Adicionar == AUTORIZACAO_RECURSO.Autorizado,
+									Editar: validacao.data.<%= props.name %>Editar == AUTORIZACAO_RECURSO.Autorizado,
+									Remover: validacao.data.<%= props.name %>Remover == AUTORIZACAO_RECURSO.Autorizado,
+									Visualizar: validacao.data.<%= props.name %>Visualizar == AUTORIZACAO_RECURSO.Autorizado,
+									EmCriacao: false
+								});
+								this.preparePaginator();
+							});
+						}
+						else if (validacao.success) {
+							MessageBox.alert(this.getText("Warning.UserUnauthorized"), () => this.getRouter().navTo("dashBoard"));
+						}
+					}, true);
+			},
+
+			initControls(){
+				let _paginator = this.byId(PAGINADOR_ID);
+				this.getPaginator = function () {
+					return _paginator;
+				};
+
+				let _searchField = this.byId(SEARCH_FIELD_ID);
+				this.getSearchField = function () {
+					return _searchField;
+				};
+
+				this.paginatorStartPage = 1;
+
+				this.getView().setBusyIndicatorDelay(20);
+			},
+			
+			iniciarModelsRelacionados() {
+				this.setModel(new JSONModel({
+					NewEdit: true,
+					Adicionar: false,
+					Editar: false,
+					Remover: false,
+					Visualizar: false,
+					EmCriacao: false
+				}), CONTROL_MODEL_NAME);	
+
+				this.Arquivo = this.createRequestModel(CURRENT_MODEL_LIST_API_PATH);
+				this.Arquivo.setData([])
+				this.Importados = this.createRequestModel(CURRENT_MODEL_LIST_API_PATH);
+				this.NaoImportados = this.createRequestModel(ADD_MULTIPLE_API_PATH);
+				this.NaoImportados.setData([])
+				this.setModel(this.Arquivo, "Arquivo");
+				this.setModel(this.Importados, IMPORTADOS);
+				this.setModel(this.NaoImportados, NAO_IMPORTADOS);				
+
+			},
+			onImportMultiplePress(oEvent) {
+				let button = oEvent.getSource();
+				button.setBusy(true)
+				this.NaoImportados.post()
+					.then(x => {
+						button.setBusy(false)
+						this.showSuccessfullMessage()
+						this.AtualizaInformacoes()
+					})
+					.catch(ex => {
+						button.setBusy(false)
+						this.showException(ex)
+					})
+			},
+
+			onAfterRendering :  function(){
+				console.log("controller [<%= props.name %>] Renderizado");
+			},	
+
+			onBeforeRendering :  function(){
+				console.log("controller [<%= props.name %>] Método chamado antes da Renderização");
+			},	
+
+			onExit :  function(){
+				console.log("controller [<%= props.name %>] Este método é chamado após a destruição do View associada");
+			},	
+
+			onNewPress(oEvent){
+				this._o<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
+				this._o<%= props.name %>Fragment.setEscapeHandler((oEscapeHandler) => {
+					this._o<%= props.name %>Fragment.destroy();
+				});
+				this.getView().addDependent(this._o<%= props.name %>Fragment);
+				this._o<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+				let oModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH);
+				this._o<%= props.name %>Fragment.setModel(oModel)
+				this._o<%= props.name %>Fragment.open()
+			},
+
+			onEditPress(oEvent){
+				this._o<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
+				this._o<%= props.name %>Fragment.setEscapeHandler((oEscapeHandler) => {
+					this._o<%= props.name %>Fragment.destroy();
+				});
+				this.getView().addDependent(this._o<%= props.name %>Fragment);
+				this._o<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
+				
+				let selectedRow = oEvent.getSource().getParent().getParent();
+				let table = selectedRow.getParent();
+				let bindingInfo = table.getBindingInfo("items")
+				let selectedObject = selectedRow.getBindingContext(bindingInfo.model).getObject()
+				let selectedObjectModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH)
+				selectedObjectModel.setData(selectedObject)				
+				this._o<%= props.name %>Fragment.setModel(selectedObjectModel)
+				this._o<%= props.name %>Fragment.open()
+
+			},
+			
+			onDeletePress(oEvent){
+				let messageDeletion = this.getText("Question.WantDeleteItem")
+				let selectedRow = oEvent.getSource().getParent().getParent();
+				let table = selectedRow.getParent();
+				let bindingInfo = table.getBindingInfo("items")
+				let selectedObject = selectedRow.getBindingContext(bindingInfo.model).getObject()
+				let fullMessage = `${messageDeletion} ${selectedObject.Descricao}`;
+				let AoConfirmar = (oAction) => {					
+					if(oAction == MessageBox.Action.YES){
+						this.deleteItem(selectedObject)
+						.then(()=> this.showSuccessfullMessage())
+						.catch(err => this.showMessageBox(err.message));
+					}					
+				}
+
+				MessageBox.confirm(fullMessage, AoConfirmar);
+
+			},
+
+			onSavePress(oEvent){
+				let modeloAlterado = this._o<%= props.name %>Fragment.getModel()
+				let busyControl = oEvent.getSource()
+				
+				busyControl.setBusy(true)
+				
+				if(modeloAlterado.isEditing()){
+					this.Atualizar(modeloAlterado).then(() =>{
+					busyControl.setBusy(false)
+					this.OperacaoRealizadaComSucesso()
+				}).catch(err => {
+					busyControl.setBusy(false)
+					this.showMessageBox(err.message)
+				})
+				}else{
+					modeloAlterado.post().then(() =>{
+						busyControl.setBusy(false)
+						this.OperacaoRealizadaComSucesso()
+					}).catch(err => {
+						busyControl.setBusy(false)
+						this.showMessageBox(err.message)
+					})
+				}
+
+			},
+
+			Atualizar(model){
+				return model.put();
+			},
+
+			Adicionar(model){
+				return model.post()
+			},
+
+			OperacaoRealizadaComSucesso(){
+				this.showSuccessfullMessage();
+				this.getPaginator().loadPageRecords(this._startNavigationCallBackHandler)
+				this._o<%= props.name %>Fragment.close();
+				this._o<%= props.name %>Fragment.destroy();
+			},
+
+			deleteItem(objetoParaExcluir){
+				let oModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH)
+				return oModel.delete(objetoParaExcluir.Id)
+			},
+
+			/*  Inicio métodos referentes a páginação */
+
+			preparePaginator() {
+				setTimeout(function () {
+					that.Importados = that.createRequestModel(CURRENT_MODEL_LIST_API_PATH);
+					that.setModel(that.Importados, CURRENT_MODEL_LIST);
+	
+					//Assume página inicial atual, para o paginador, quando houver...
+					that.paginatorStartPage = max(1, that.getPaginator().getPage());
+					that.getPaginator().setView(that.getView());
+					that.getPaginator().setTable(that.byId(TABLE_ID));
+					that.getPaginator().setTableModel(that.Importados);
+					that.getPaginator().setTableModelName(CURRENT_MODEL_LIST);
+					that.getPaginator().setTotalRecordsEndPointAddress(PAGINATOR_ENDPOINT);
+					that.getPaginator().setPageRecordsEndPointAddress(PAGINATOR_ENDPOINT_SEARCH);
+					that.startNavigation(that._startNavigationCallBackHandler);
+				}, 300);
+			},
+
+			_startNavigationCallBackHandler: function () {
+				if (!vazia(this) && this.getPaginator().getTotalRecords() <= 0)
+					MessageToast.show("Nada encontrado.");
+			},
+
+			startNavigation(fnCallBack = null) {
+				let that = this;
+				let paginator = this.getPaginator();
+				paginator.startNavigation();
+				paginator.doGetTotalRecords(function (success = true, message = "") {
+					if (success) {
+						paginator.setPage(that.paginatorStartPage);
+						paginator.loadPageRecords();
+						if (isFunction(fnCallBack)) fnCallBack.call(that);
+					}
+				});
+			},	
+			
+			restartNavigation(fnCallBack = null) {
+				this.paginatorStartPage = 1;
+				this.startNavigation(fnCallBack);
+			},
+	
+			onPaginatorGetFilterExpression(oEvent) {
+				let search = this.getSearchField().getValue();
+				let filter = "";  //"SQL = [ALIAS].[NomeColuna] cond expressão"
+				this.getPaginator().setFilterExpression(filter);
+				this.getPaginator().setSearchExpression(search);
+			},
+	
+			onPaginatorAfterGetTotalRecords: function (oEvent) { },
+	
+			onPaginatorAfterGetPageRecords: function (oEvent) { },
+	
+			onSearchFieldChangeHandler: function (oEvent) {
+				if (this.getPaginator().getActive()) {
+					if (vazia(this.getSearchField().getValue()))
+						this.restartNavigation(this._startNavigationCallBackHandler);
+				}
+			},
+	
+			onSearchFieldClickHandler: function (oEvent) {
+				if (oEvent.getParameter("clearButtonPressed") === false) {
+					let validSearchExpression = this.getPaginator().validateSearchExpression(this.getSearchField().getValue(), false);
+					if (!validSearchExpression.success) {
+						MessageToast.show(validSearchExpression.message);
+					} else
+						this.restartNavigation(this._startNavigationCallBackHandler);
+				}else{
+					this.restartNavigation(this._startNavigationCallBackHandler);
+				}
+			},
+
+			/* Fim metodos paginação*/
+
+			loadFile: function (file) {
+				var that = this;
+				var excelData = {};
+				if (file && window.FileReader) {
+					var reader = new FileReader();
+					reader.onload = function (e) {
+						var data = e.target.result;
+						var workbook = XLSX.read(data, {
+							type: 'binary'
+						});
+						workbook.SheetNames.forEach(function (sheetName) {
+							// Here is your object for every sheet in workbook
+							excelData = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+
+						});
+						// Setting the data to the local model 
+						that.Arquivo.setData(excelData);
+						that.Arquivo.refresh(true);
+						that._iconTabBar.setSelectedKey(NAO_IMPORTADOS_FILTER_KEY)
+						that.AtualizaInformacoes()
+
+					};
+					reader.onerror = function (ex) {
+						console.log(ex);
+					};
+					reader.readAsBinaryString(file);
+				}
+			},
+
+			onCarregarArquivoPress: function (e) {
+				this.loadFile(e.getParameter("files") && e.getParameter("files")[0]);
+			},
+
+			AtualizaInformacoes() {
+				this.Importados.get()
+					.then(() => {
+						let importados = this.Importados.getData();
+						let naoImportados = this.Arquivo.getData().filter(x => !importados.some(a => a.Codigo == x.Codigo));
+						this.NaoImportados.setData(naoImportados);
+						this.NaoImportados.refresh(true);
+						this.updatePageFooter(naoImportados.length > 0)
+					})
+			},
+
+			onImportSinglePress(oEvent) {
+				let selectedData = oEvent.getSource().getBindingContext(NAO_IMPORTADOS).getObject();
+				let addModel = this.createRequestModel(CURRENT_MODEL_LIST_API_PATH);
+				let button = oEvent.getSource();
+				button.setBusy(true)
+				addModel.setData(selectedData);
+				this.Adicionar(addModel)
+					.then(() => {
+						//button.setBusy(false)
+						this.AtualizaInformacoes()
+						this.showSuccessfullMessage()
+					})
+					.catch(this.showException)
+					.finally(() => button.setBusy(false))
+			},
+			updatePageFooter(showFooter) {
+				this._page.setShowFooter(showFooter);
+			},
+
+		});
+	}
+);

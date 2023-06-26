@@ -13,6 +13,8 @@ module.exports = {
       createCrudController,
       createCrudFragment,
       createCrudView,
+      createControllerImport,
+      createViewImport
     } = toolbox
   
     
@@ -37,6 +39,7 @@ module.exports = {
     const isRoute    = (type[0] == 'r')
     const isFragment = (type[0] == 'f')
     const isCrud     = (type[0] == 'c')
+    const isImport   = (type[0] == 'i')
     const removeMenu = parameters.third == '-m';
     
     if(isPAge){           
@@ -45,6 +48,19 @@ module.exports = {
       
       createView(folder);
       createController(folder);
+      createLabel(folder);       
+      createRoute(folder, parameters.array)
+      if(!removeMenu) {
+        createMenu(folder);
+      }
+    }
+
+    if(isImport){           
+      parameters.array.shift()
+      parameters.array.shift();
+      
+      createViewImport(folder);
+      createControllerImport(folder);
       createLabel(folder);       
       createRoute(folder, parameters.array)
       if(!removeMenu) {

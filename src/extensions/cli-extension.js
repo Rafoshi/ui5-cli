@@ -126,11 +126,13 @@ module.exports = toolbox => {
     const appMenu = await filesystem.read(appMenuPath, 'json');
     
     let title =`Title.${props.name}`
+    let auth =`${props.name}Visualizar`
     let menu = {
       title,
       "icon": "sap-icon://error",
       "expanded": true,
-      "key": props.name
+      "key": props.name,
+      "authorization": auth
     }
 
     appMenu.navigation = appMenu.navigation.filter(n => n.key != props.name);
@@ -201,6 +203,40 @@ module.exports = toolbox => {
     success(`CONTROLLER CRIADO: ${controller}`);
 
   }
+  async function createViewImport(folder, segments) {
+    let props = await getProperties(folder, segments);
+    let target = `${props.destination}.view.xml`;
+
+    await generate({
+      template: 'viewImportar.js.ejs',
+      target,
+      props: {
+        name: props.name,
+        target : props.destTarget,
+        folder: props.folder,
+        namespace: props.namespace
+      }
+    });
+
+    success(`VIEW CRIADA: ${target}`)
+  }
+  async function createControllerImport(folder) {
+    let props = await getProperties(folder);
+    let controller = `${props.destination}.controller.js`;
+    await generate({
+      template: 'controllerImportar.js.ejs',
+      target: controller,
+      props: {
+        name: props.name,
+        target : props.destTarget,
+        folder: props.folder,
+        namespace: props.namespace
+      }
+    })
+    success(`CONTROLLER CRIADO: ${controller}`);
+
+  }
+
   async function createCrudController(folder) {
     let props = await getProperties(folder);
     let controller = `${props.destination}.controller.js`;
@@ -262,5 +298,8 @@ module.exports = toolbox => {
   toolbox.createCrudController = createCrudController;
   toolbox.createCrudFragment = createCrudFragment
   toolbox.createCrudView = createCrudView
-
+  toolbox.createControllerImport = createControllerImport
+  toolbox.createViewImport = createViewImport
+  
+  
 }
