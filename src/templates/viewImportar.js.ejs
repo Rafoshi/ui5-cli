@@ -42,72 +42,8 @@
 						text="{i18n>Title.ResultadoImportacao}"
 						 >
 						<content>
-							<Table 
-							id="id<%= props.name %>TableParaResultado"
-							inset="false"
-							busyIndicatorSize="Medium"
-							growing="true" 
-							growingScrollToLoad="true"
-							alternateRowColors="true"
-							items="{Resultado>/}">
-							<headerToolbar>
-								<Toolbar>
-									<SearchField id="id<%= props.name %>earchFieldImportados" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="100%" />
-								</Toolbar>
-							</headerToolbar>
-							<columns>
-								<Column
-									width="6em">
-									<Text text="{i18n>Commom.<%= props.name %>}" />
-								</Column>
-								<Column
-									minScreenWidth="Tablet"
-									demandPopin="true">
-									<Text text="{i18n>Title.Description}" />
-								</Column>
-								<Column
-									width="6em"
-									minScreenWidth="Tablet"
-									demandPopin="true">
-									<Text text="{i18n>Title.Anexo}" />
-								</Column>
-								<Column
-									width="6em"
-									minScreenWidth="Tablet"
-									demandPopin="true">
-									<Text text="{i18n>Title.FatorR}" />
-								</Column>
-								<Column
-									hAlign="End" 
-									width="6em"
-									minScreenWidth="Tablet"
-									demandPopin="true">
-									<Text text="{i18n>Title.Alicota}" />
-								</Column>
-								<Column
-									width="104px" 
-									minScreenWidth="Tablet"
-									demandPopin="true"
-									hAlign="Center">
-									<Text text="{i18n>Title.Actions}" />
-								</Column>
-								
-							</columns>
-							<items>
-								<ColumnListItem vAlign="Middle">
-									<cells>
-										<ObjectIdentifier title="{<%= props.name %>Importados>Codigo{i18n>Commom.<%= props.name %>}"/>
-										<Text text="{<%= props.name %>Importados>Descricao}"  wrapping="false" tooltip="{<%= props.name %>Importados>Descricao}"  />
-										<Text text="{<%= props.name %>Importados>Anexo}" />
-										<CheckBox  selected="{= ${<%= props.name %>Importados>FatorR} === 'S' ? true : false}" displayOnly="true" />
-										<Text text="{<%= props.name %>Importados>Aliquota}%" />
-										<HBox justifyContent="SpaceAround" alignContent="SpaceAround" > 
-											<Button  class="sapUiTinyMarginEnd" enabled="{controlModel>/Remover}" icon="sap-icon://delete"  press="onRemovePress"  type="Reject" />
-										</HBox>
-									</cells>
-								</ColumnListItem>
-							</items>
-							</Table>							
+							<core:Fragment fragmentName="<%= props.target%>.<%= props.name %>.Fragments.Resultado" type="XML" />
+						
 						</content>
 					</IconTabFilter>
 				</items>
