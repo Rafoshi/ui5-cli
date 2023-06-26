@@ -14,7 +14,8 @@ module.exports = {
       createCrudFragment,
       createCrudView,
       createControllerImport,
-      createViewImport
+      createViewImport,
+      createFragmentFixed
     } = toolbox
   
     
@@ -66,6 +67,9 @@ module.exports = {
       if(!removeMenu) {
         createMenu(folder);
       }
+      
+      createFragmentFixed(`${folder}/Fragments/Lista`)
+      createFragmentFixed(`${folder}/Fragments/Resultado`)
     }
     
     if(isCrud){           

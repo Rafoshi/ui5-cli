@@ -271,6 +271,23 @@ module.exports = toolbox => {
 
     success(`FRAGMENTO CRIADO: ${target}`);
   }
+  async function createFragmentFixed(folder) {
+
+    let props = await getProperties(folder);
+    let target = `${props.destination}.fragment.xml`;
+    await generate({
+      template: 'fragmentClean.js.ejs',
+      target,
+      props: {
+        name: props.name,
+        folder: folder,
+        target : props.destTarget,
+        namespace: props.namespace
+      }
+    });
+
+    success(`FRAGMENTO CRIADO: ${target}`);
+  }
   async function createCrudFragment(folder) {
 
     let props = await getProperties(folder);
@@ -300,6 +317,7 @@ module.exports = toolbox => {
   toolbox.createCrudView = createCrudView
   toolbox.createControllerImport = createControllerImport
   toolbox.createViewImport = createViewImport
+  toolbox.createFragmentFixed = createFragmentFixed
   
   
 }
