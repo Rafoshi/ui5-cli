@@ -1,0 +1,20 @@
+<core:FragmentDefinition 
+	xmlns="sap.m" 
+	xmlns:code="sap.ui.codeeditor"
+	xmlns:core="sap.ui.core" 
+	>
+    <Dialog
+        title="{i18n>Commom.JsonData}" 
+        draggable="true"
+        contentWidth="700px">
+		<content>
+			<VBox class="sapUiResponsiveMargin">
+				<code:CodeEditor editable="false" height="300px" type="javascript" value='{/json}'></code:CodeEditor>
+			</VBox>
+		</content>
+		<endButton>
+			<Button class="sapUiTinyMarginEnd" text="{i18n>Action.Cancel}" press="onDialogCancelPress" type="Reject" width="" tooltip="{i18n>Action.Cancel}"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>
+

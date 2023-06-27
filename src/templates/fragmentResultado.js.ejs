@@ -1,0 +1,73 @@
+    <core:FragmentDefinition 
+	xmlns="sap.m" 
+	xmlns:card="sap.f.cards"
+	xmlns:edts="sicap-controls.editors" 
+	xmlns:core="sap.ui.core" 
+	xmlns:bd="sap.ui.webc.main"
+	xmlns:f="sap.f" 
+	xmlns:l="sap.ui.layout">
+    <Panel expandable="true" width="auto" class="sapUiResponsiveMargin">
+		<headerToolbar>
+			<OverflowToolbar style="Clear">
+				<Title text="{i18n>Title.Importador.Regeitados}" />
+				<ToolbarSpacer />
+				<bd:Badge colorScheme="2" text="{Resultado>/TotalRejeitado}" />
+			</OverflowToolbar>
+		</headerToolbar>
+		<List
+			items="{Resultado>/Regeitados/}"			
+			growing="true"
+			growingThreshold="10"
+			growingScrollToLoad="false">
+			<StandardListItem
+				type="Navigation"				
+				title="{Resultado>Motivo}"
+				press="onResultPress"
+			/>
+		
+		</List>		
+	</Panel>	
+    <Panel expandable="true" width="auto" class="sapUiResponsiveMargin">
+		<headerToolbar>
+			<OverflowToolbar style="Clear">
+				<Title text="{i18n>Title.Importador.Ignorados}" />
+				<ToolbarSpacer />
+				<bd:Badge colorScheme="1" text="{Resultado>/TotalIgnorado}" />
+			</OverflowToolbar>
+		</headerToolbar>
+		<List
+			items="{Resultado>/Ignorados/}"			
+			growing="true"
+			growingThreshold="10"
+			growingScrollToLoad="false">
+			<StandardListItem
+				type="Navigation"				
+				title="{Resultado>Motivo}"
+				press="onResultPress"
+			/>
+		
+		</List>		
+	</Panel>	
+    <Panel expandable="true" width="auto" class="sapUiResponsiveMargin">
+		<headerToolbar>
+			<OverflowToolbar style="Clear">
+				<Title text="{i18n>Title.ImportadosComSucesso}" />
+				<ToolbarSpacer />
+				<bd:Badge colorScheme="8" text="{Resultado>/TotalImportado}" />
+			</OverflowToolbar>
+		</headerToolbar>
+		<List
+			items="{Resultado>/Sucesso/}"			
+			growing="true"
+			growingThreshold="10"
+			growingScrollToLoad="false">
+			<StandardListItem
+				type="Navigation"				
+				title="{Resultado>Motivo}"
+				press="onResultPress"
+			/>
+		
+		</List>		
+	</Panel>	
+</core:FragmentDefinition>
+

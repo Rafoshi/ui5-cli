@@ -8,7 +8,9 @@ sap.ui.define(
 		"use strict";
 
 		const FRAGMENT_CADASTRO_PATH = "<%= props.target%>.fragments.<%= props.name %>";
-		const FRAGMENT_LISTA_PATH = "<%= props.target%>.fragments.<%= props.name %>.Lista";
+		const FRAGMENT_LISTA_PATH = "<%= props.target%>.<%= props.name %>.Fragments.Lista";
+		const FRAGMENT_OBJETO_PATH = "<%= props.target%>.<%= props.name %>.Fragments.Objeto";
+
 		const CONTROL_MODEL_NAME = "controlModel";
 		const CURRENT_MODEL_LIST = "<%= props.name %>";
 		const PAGE_ROUTE = "<%= props.name %>";
@@ -364,6 +366,20 @@ sap.ui.define(
 			updatePageFooter(showFooter) {
 				this._page.setShowFooter(showFooter);
 			},
+
+			onResultPress(oEvent){
+				let selectedData = oEvent.getSource().getBindingContext("Resultado").getObject();
+				let json = JSON.stringify(selectedData.Item)
+				selectedData.json = json;
+				this._viewJson = sap.ui.xmlfragment(FRAGMENT_OBJETO_PATH, this);
+				this._viewJson.setEscapeHandler((oEscapeHandler) => {
+					this._viewJson.close();
+					this._viewJson.destroy();
+				});
+				this.getView().addDependent(this._viewJson)
+				this._viewJson.setModel(new JSONModel(selectedData))
+				this._viewJson.open()
+			}
 
 		});
 	}
