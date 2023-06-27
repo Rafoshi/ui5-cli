@@ -288,6 +288,40 @@ module.exports = toolbox => {
 
     success(`FRAGMENTO CRIADO: ${target}`);
   }
+  async function createFragmentObjeto(folder) {
+
+    let props = await getProperties(folder);
+    let target = `${props.destination}.fragment.xml`;
+    await generate({
+      template: 'fragmentObjeto.js.ejs',
+      target,
+      props: {
+        name: props.name,
+        folder: folder,
+        target : props.destTarget,
+        namespace: props.namespace
+      }
+    });
+
+    success(`FRAGMENTO CRIADO: ${target}`);
+  }
+  async function createFragmentResultado(folder) {
+
+    let props = await getProperties(folder);
+    let target = `${props.destination}.fragment.xml`;
+    await generate({
+      template: 'fragmentResultado.js.ejs',
+      target,
+      props: {
+        name: props.name,
+        folder: folder,
+        target : props.destTarget,
+        namespace: props.namespace
+      }
+    });
+
+    success(`FRAGMENTO CRIADO: ${target}`);
+  }
   async function createCrudFragment(folder) {
 
     let props = await getProperties(folder);
