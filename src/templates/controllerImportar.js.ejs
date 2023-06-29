@@ -122,29 +122,7 @@ sap.ui.define(
 					})
 			},
 
-			onAfterRendering :  function(){
-				console.log("controller [<%= props.name %>] Renderizado");
-			},	
-
-			onBeforeRendering :  function(){
-				console.log("controller [<%= props.name %>] Método chamado antes da Renderização");
-			},	
-
-			onExit :  function(){
-				console.log("controller [<%= props.name %>] Este método é chamado após a destruição do View associada");
-			},	
-
-			onNewPress(oEvent){
-				this._o<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
-				this._o<%= props.name %>Fragment.setEscapeHandler((oEscapeHandler) => {
-					this._o<%= props.name %>Fragment.destroy();
-				});
-				this.getView().addDependent(this._o<%= props.name %>Fragment);
-				this._o<%= props.name %>Fragment.addStyleClass(this.getOwnerComponent().getContentDensityClass());
-				let oModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH);
-				this._o<%= props.name %>Fragment.setModel(oModel)
-				this._o<%= props.name %>Fragment.open()
-			},
+		
 
 			onEditPress(oEvent){
 				this._o<%= props.name %>Fragment = sap.ui.xmlfragment(FRAGMENT_CADASTRO_PATH, this);
@@ -165,24 +143,7 @@ sap.ui.define(
 
 			},
 			
-			onDeletePress(oEvent){
-				let messageDeletion = this.getText("Question.WantDeleteItem")
-				let selectedRow = oEvent.getSource().getParent().getParent();
-				let table = selectedRow.getParent();
-				let bindingInfo = table.getBindingInfo("items")
-				let selectedObject = selectedRow.getBindingContext(bindingInfo.model).getObject()
-				let fullMessage = `${messageDeletion} ${selectedObject.Descricao}`;
-				let AoConfirmar = (oAction) => {					
-					if(oAction == MessageBox.Action.YES){
-						this.deleteItem(selectedObject)
-						.then(()=> this.showSuccessfullMessage())
-						.catch(err => this.showMessageBox(err.message));
-					}					
-				}
-
-				MessageBox.confirm(fullMessage, AoConfirmar);
-
-			},
+	
 
 			onSavePress(oEvent){
 				let modeloAlterado = this._o<%= props.name %>Fragment.getModel()
@@ -210,99 +171,13 @@ sap.ui.define(
 
 			},
 
-			Atualizar(model){
-				return model.put();
-			},
-
-			Adicionar(model){
-				return model.post()
-			},
 
 			OperacaoRealizadaComSucesso(){
 				this.showSuccessfullMessage();
 				this.getPaginator().loadPageRecords(this._startNavigationCallBackHandler)
 				this._o<%= props.name %>Fragment.close();
 				this._o<%= props.name %>Fragment.destroy();
-			},
-
-			deleteItem(objetoParaExcluir){
-				let oModel = this.createRestModel(CURRENT_MODEL_LIST_API_PATH)
-				return oModel.delete(objetoParaExcluir.Id)
-			},
-
-			/*  Inicio métodos referentes a páginação */
-
-			preparePaginator() {
-				setTimeout(function () {
-					that.Importados = that.createRequestModel(CURRENT_MODEL_LIST_API_PATH);
-					that.setModel(that.Importados, CURRENT_MODEL_LIST);
-	
-					//Assume página inicial atual, para o paginador, quando houver...
-					that.paginatorStartPage = max(1, that.getPaginator().getPage());
-					that.getPaginator().setView(that.getView());
-					that.getPaginator().setTable(that.byId(TABLE_ID));
-					that.getPaginator().setTableModel(that.Importados);
-					that.getPaginator().setTableModelName(CURRENT_MODEL_LIST);
-					that.getPaginator().setTotalRecordsEndPointAddress(PAGINATOR_ENDPOINT);
-					that.getPaginator().setPageRecordsEndPointAddress(PAGINATOR_ENDPOINT_SEARCH);
-					that.startNavigation(that._startNavigationCallBackHandler);
-				}, 300);
-			},
-
-			_startNavigationCallBackHandler: function () {
-				if (!vazia(this) && this.getPaginator().getTotalRecords() <= 0)
-					MessageToast.show("Nada encontrado.");
-			},
-
-			startNavigation(fnCallBack = null) {
-				let that = this;
-				let paginator = this.getPaginator();
-				paginator.startNavigation();
-				paginator.doGetTotalRecords(function (success = true, message = "") {
-					if (success) {
-						paginator.setPage(that.paginatorStartPage);
-						paginator.loadPageRecords();
-						if (isFunction(fnCallBack)) fnCallBack.call(that);
-					}
-				});
-			},	
-			
-			restartNavigation(fnCallBack = null) {
-				this.paginatorStartPage = 1;
-				this.startNavigation(fnCallBack);
-			},
-	
-			onPaginatorGetFilterExpression(oEvent) {
-				let search = this.getSearchField().getValue();
-				let filter = "";  //"SQL = [ALIAS].[NomeColuna] cond expressão"
-				this.getPaginator().setFilterExpression(filter);
-				this.getPaginator().setSearchExpression(search);
-			},
-	
-			onPaginatorAfterGetTotalRecords: function (oEvent) { },
-	
-			onPaginatorAfterGetPageRecords: function (oEvent) { },
-	
-			onSearchFieldChangeHandler: function (oEvent) {
-				if (this.getPaginator().getActive()) {
-					if (vazia(this.getSearchField().getValue()))
-						this.restartNavigation(this._startNavigationCallBackHandler);
-				}
-			},
-	
-			onSearchFieldClickHandler: function (oEvent) {
-				if (oEvent.getParameter("clearButtonPressed") === false) {
-					let validSearchExpression = this.getPaginator().validateSearchExpression(this.getSearchField().getValue(), false);
-					if (!validSearchExpression.success) {
-						MessageToast.show(validSearchExpression.message);
-					} else
-						this.restartNavigation(this._startNavigationCallBackHandler);
-				}else{
-					this.restartNavigation(this._startNavigationCallBackHandler);
-				}
-			},
-
-			/* Fim metodos paginação*/
+			},			
 
 			loadFile: function (file) {
 				var that = this;

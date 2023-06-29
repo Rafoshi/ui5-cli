@@ -288,12 +288,12 @@ module.exports = toolbox => {
 
     success(`FRAGMENTO CRIADO: ${target}`);
   }
-  async function createFragmentObjeto(folder) {
+  async function createFragmentJson(folder) {
 
     let props = await getProperties(folder);
     let target = `${props.destination}.fragment.xml`;
     await generate({
-      template: 'fragmentObjeto.js.ejs',
+      template: 'fragmentJson.js.ejs',
       target,
       props: {
         name: props.name,
@@ -311,6 +311,23 @@ module.exports = toolbox => {
     let target = `${props.destination}.fragment.xml`;
     await generate({
       template: 'fragmentResultado.js.ejs',
+      target,
+      props: {
+        name: props.name,
+        folder: folder,
+        target : props.destTarget,
+        namespace: props.namespace
+      }
+    });
+
+    success(`FRAGMENTO CRIADO: ${target}`);
+  }
+  async function createFragmentEdit(folder) {
+
+    let props = await getProperties(folder);
+    let target = `${props.destination}.fragment.xml`;
+    await generate({
+      template: 'fragmentEdit.js.ejs',
       target,
       props: {
         name: props.name,
@@ -352,6 +369,8 @@ module.exports = toolbox => {
   toolbox.createControllerImport = createControllerImport
   toolbox.createViewImport = createViewImport
   toolbox.createFragmentFixed = createFragmentFixed
+  toolbox.createFragmentJson = createFragmentJson
+  toolbox.createFragmentResultado = createFragmentResultado
   
   
 }
