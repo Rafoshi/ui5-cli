@@ -38,7 +38,7 @@
 									<f:fields>
 										<FlexBox>
 											<items>
-												<Input editable="{controlModel>/NewEdit}" width="100%" value="{/Descricao}">
+												<Input enabled="{= (${controlModel>/Adicionar} &amp;&amp; ${controlModel>/EmCriacao}) || ${controlModel>/Editar}}" width="100%" value="{/Descricao}">
 													<layoutData>
 														<FlexItemData maxWidth="200px" growFactor="1"/>
 													</layoutData>
@@ -54,7 +54,7 @@
 			</VBox>
         </edts:content>
         <edts:beginButton>
-			<edts:SICAPButton class="sapUiTinyMarginEnd" activeIcon="" enabled="{controlModel>/NewEdit}" icon="" iconDensityAware="true" iconFirst="true" text="{i18n>Action.Save}" press="onSavePress" textDirection="Inherit" type="Accept" />
+			<edts:SICAPButton class="sapUiTinyMarginEnd" activeIcon="" enabled="{= (${controlModel>/Adicionar} &amp;&amp; ${controlModel>/EmCriacao}) || ${controlModel>/Editar}}" icon="" iconDensityAware="true" iconFirst="true" text="{i18n>Action.Save}" press="onSavePress" textDirection="Inherit" type="Accept" />
 		</edts:beginButton>
 		<edts:endButton>
 			<Button class="sapUiTinyMarginEnd" activeIcon="" enabled="true" icon="" iconDensityAware="true" iconFirst="true" text="{i18n>Action.Cancel}" press="onDialogCancelPressAndDestroy" textDirection="Inherit" type="Reject" />
