@@ -18,9 +18,9 @@
 			items="{<%= props.name %>>/}">
 			<headerToolbar>
 				<Toolbar>
-					<SearchField id="id<%= props.name %>SearchField" search="onSearchFieldClickHandler" placeholder="{i18n>Placeholder.Find}"  width="100%" />
+					<SearchField id="id<%= props.name %>SearchField" search="onSearchFieldClickHandler" liveChange="onSearchFieldChangeHandler" placeholder="{i18n>Placeholder.Find}"  width="100%" />
 					<ToolbarSpacer/>
-					<Button  icon="sap-icon://add" type="Emphasized"   text="{i18n>Action.New}"  press="onNewPress"/>
+					<Button enabled="{controlModel>/Adicionar}" icon="sap-icon://add" type="Emphasized"   text="{i18n>Action.New}"  press="onNewPress"/>
 				</Toolbar>
 			</headerToolbar>
 			<columns>
@@ -48,9 +48,9 @@
 							 title="{<%= props.name %>>Id}"/>
 						<Text
 							text="{<%= props.name %>>Descricao}" />
-						<HBox justifyContent="SpaceBetween" alignContent="SpaceBetween" > 
-							<Button  icon="sap-icon://edit"  press="onEditPress"  type="Default" />
-							<Button  icon="sap-icon://delete" press="onDeletePress" type="Reject"    />
+						<HBox alignItems="Center" > 
+							<Button class="sapUiTinyMarginEnd" enabled="{= ${controlModel>/Adicionar} || ${controlModel>/Editar} || ${controlModel>/Visualizar}}" tooltip="{= ${controlModel>/Editar} ? ${i18n>Action.Edit} : ${i18n>Action.View}}" icon="{= (${controlModel>/Editar}) ? 'sap-icon://edit' : 'sap-icon://show'}" type="Ghost" press="onEditPress" />
+							<Button class="sapUiTinyMarginEnd" enabled="{controlModel>/Remover}" icon="sap-icon://delete" type="Reject" press="onDeletePress" />
 						</HBox>
 					</cells>
 				</ColumnListItem>
